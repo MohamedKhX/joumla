@@ -2,20 +2,23 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Resources\WholesaleStoreResource\Pages;
-use App\Filament\Resources\WholesaleStoreResource\RelationManagers;
-use App\Models\WholesaleStore;
+use App\Filament\Admin\Resources\TraderResource\Pages;
+use App\Filament\Admin\Resources\TraderResource\RelationManagers;
+use App\Models\Trader;
 use App\Traits\HasTranslatedLabels;
+use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class WholesaleStoreResource extends Resource
+class TraderResource extends Resource
 {
     use HasTranslatedLabels;
 
-    protected static ?string $model = WholesaleStore::class;
+    protected static ?string $model = Trader::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -56,9 +59,9 @@ class WholesaleStoreResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => \App\Filament\Admin\Resources\WholesaleStoreResource\Pages\ListWholesaleStores::route('/'),
-            'create' => \App\Filament\Admin\Resources\WholesaleStoreResource\Pages\CreateWholesaleStore::route('/create'),
-            'edit' => \App\Filament\Admin\Resources\WholesaleStoreResource\Pages\EditWholesaleStore::route('/{record}/edit'),
+            'index' => Pages\ListTraders::route('/'),
+            'create' => Pages\CreateTrader::route('/create'),
+            'edit' => Pages\EditTrader::route('/{record}/edit'),
         ];
     }
 }

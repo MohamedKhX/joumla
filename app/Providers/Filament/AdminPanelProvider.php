@@ -53,6 +53,19 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->colors([
+                'primary'   => Color::Teal,
+                'gray'      => Color::Gray,
+                'green'     => Color::Green,
+                'red'       => Color::Red,
+                'yellow'    => Color::Yellow,
+                'blue'      => Color::Blue,
+                'orange'    => Color::Orange,
+                'darkgreen' => '#28a745',
+                'purple'    => Color::Purple,
+                'teal'      => Color::Teal,
+            ])
+            ->font('Rubik');
     }
 }
