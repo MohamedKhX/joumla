@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('traders', function (Blueprint $table) {
             $table->id();
-
+            $table->string('store_name', 100);
+            $table->string('phone', 20)->nullable();
+            $table->string('city', 100)->nullable();
+            $table->string('address', 255)->nullable();
+            $table->string('store_type', 50)->nullable();
+            $table->decimal('location_latitude')->nullable();
+            $table->decimal('location_longitude')->nullable();
             $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });

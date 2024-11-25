@@ -14,6 +14,14 @@ return new class extends Migration
         Schema::create('wholesale_stores', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100);
+            $table->string('city', 100);
+            $table->string('address', 100);
+            $table->enum('type', \App\Enums\WholesaleStoreEnum::values());
+            $table->string('phone');
+            $table->decimal('location_latitude');
+            $table->decimal('location_longitude');
+
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }

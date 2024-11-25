@@ -2,7 +2,17 @@
     "Trader": "التاجر",
     "Traders": "التجار",
     "Wholesale Store": "محل جملة",
-    "Wholesale Stores": "محل جملة",
+    "Wholesale Stores": "محلات الجملة",
     "Invoice": "الفاتورة",
-    "Invoices": "الفواتير"
+    "Invoices": "الفواتير",
+    "Trader Name": "اسم التاجر",
+    "Trader Email": "البريد الإلكتروني للتاجر",
+    "Store Name": "اسم المتجر",
+    "Store Phone": "هاتف المتجر",
+    "Store Type": "نوع المتجر",
+    "Wholesale Store Name": "اسم متجر الجملة",
+    "Wholesale Store Email": "البريد الإلكتروني لمتجر الجملة",
+    "Wholesale Store Phone": "هاتف متجر الجملة",
+    "Wholesale Store Type": "نوع متجر الجملة"
 }
+

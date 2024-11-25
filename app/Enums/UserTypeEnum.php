@@ -2,9 +2,13 @@
 
 namespace App\Enums;
 
+use App\Traits\Enum;
+
 enum UserTypeEnum: string
 {
+    use Enum;
+
     case Admin = 'Admin';
     case Wholesaler = 'Wholesaler';
-    case customer = 'Customer';
+    case Trader = 'Trader';
 }

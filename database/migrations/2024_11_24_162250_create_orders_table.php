@@ -16,8 +16,14 @@ return new class extends Migration
             $table->date('date');
             $table->string('state');
 
-            $table->foreignId('trader_id')->constrained('traders');
-            $table->foreignId('wholesale_store_id')->constrained('wholesale_stores');
+            $table->foreignId('trader_id')
+                ->constrained('traders')
+                ->cascadeOnDelete();
+
+            $table->foreignId('wholesale_store_id')
+                ->constrained('wholesale_stores')
+                ->cascadeOnDelete();
+
             $table->timestamps();
         });
     }

@@ -18,10 +18,12 @@ return new class extends Migration
             $table->string('number')->unique();
 
             $table->foreignId('order_id')
-                ->constrained('orders');
+                ->constrained('orders')
+                ->cascadeOnDelete();
 
             $table->foreignId('trader_id')
-                ->constrained('traders');
+                ->constrained('traders')
+                ->cascadeOnDelete();
 
             $table->timestamps();
         });

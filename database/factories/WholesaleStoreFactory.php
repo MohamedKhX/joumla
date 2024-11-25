@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\WholesaleStoreEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,13 @@ class WholesaleStoreFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->name(),
+            'phone' => $this->faker->phoneNumber(),
+            'location_latitude' => $this->faker->latitude(),
+            'location_longitude' => $this->faker->longitude(),
+            'city' => $this->faker->city(),
+            'address' => $this->faker->address(),
+            'type' => $this->faker->randomElement(WholesaleStoreEnum::values())
         ];
     }
 }
