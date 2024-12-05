@@ -26,7 +26,7 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             $table->foreignId('wholesale_store_id')
-                ->constrained('')
+                ->constrained()
                 ->cascadeOnDelete();
 
             $table->timestamps();

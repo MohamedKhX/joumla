@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\WholesaleStore\Reports;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -25,13 +26,14 @@ class WholesaleStorePanelProvider extends PanelProvider
         return $panel
             ->id('wholesaleStore')
             ->path('wholesaleStore')
+            ->login()
             ->colors([
                 'primary' => Color::Amber,
             ])
             ->discoverResources(in: app_path('Filament/WholesaleStore/Resources'), for: 'App\\Filament\\WholesaleStore\\Resources')
             ->discoverPages(in: app_path('Filament/WholesaleStore/Pages'), for: 'App\\Filament\\WholesaleStore\\Pages')
             ->pages([
-                Pages\Dashboard::class,
+                Reports::class
             ])
             ->discoverWidgets(in: app_path('Filament/WholesaleStore/Widgets'), for: 'App\\Filament\\WholesaleStore\\Widgets')
             ->widgets([
@@ -53,7 +55,7 @@ class WholesaleStorePanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->colors([
-                'primary'   => Color::Teal,
+                'primary'   => Color::Blue,
                 'gray'      => Color::Gray,
                 'green'     => Color::Green,
                 'red'       => Color::Red,

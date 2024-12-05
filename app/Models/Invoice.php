@@ -16,4 +16,14 @@ class Invoice extends Model
     {
         return $this->belongsTo(Order::class);
     }
+
+    public function trader(): BelongsTo
+    {
+        return $this->belongsTo(Trader::class);
+    }
+
+    public function wholesaleStore(): BelongsTo
+    {
+        return $this->belongsTo(WholesaleStore::class);
+    }
 }

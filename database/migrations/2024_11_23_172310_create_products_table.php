@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name', 100);
             $table->text('description');
-            $table->string('number')->unique();
             $table->decimal('price');
 
             $table->foreignId('wholesale_store_id')->constrained('wholesale_stores');

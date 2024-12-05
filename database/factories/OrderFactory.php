@@ -18,7 +18,7 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'data' => now(),
+            'date' => now(),
             'state' => $this->faker->randomElement(OrderStateEnum::values()),
         ];
     }

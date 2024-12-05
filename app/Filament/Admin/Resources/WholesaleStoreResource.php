@@ -17,6 +17,8 @@ use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Builder;
 
 class WholesaleStoreResource extends Resource
 {
@@ -79,6 +81,8 @@ class WholesaleStoreResource extends Resource
                             ->columnSpan(1),
 
                         Fieldset::make('user')
+                            ->label('User')
+                            ->translateLabel()
                             ->relationship('user')
                             ->schema([
                                 TextInput::make('email')
@@ -138,6 +142,10 @@ class WholesaleStoreResource extends Resource
             ]);
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->latest();
+    }
 
     public static function getPages(): array
     {

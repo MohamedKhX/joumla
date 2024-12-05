@@ -137,6 +137,11 @@ class TraderResource extends Resource
         return false;
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->latest();
+    }
+
     public static function getPages(): array
     {
         return [

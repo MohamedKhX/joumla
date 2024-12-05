@@ -16,23 +16,31 @@ class InvoiceSeeder extends Seeder
      */
     public function run(): void
     {
-        $product1 = Product::factory()->create();
-
         //create 10 orders
-        $orders = Order::factory()->create();
+        $orders = Order::factory(5)->create([
+            'wholesale_store_id' => 1,
+            'trader_id' => 1,
+        ]);
 
         foreach ($orders as $order) {
+            $product = Product::find(rand(1, 10));
+
             OrderItem::factory()->create([
                 'order_id'   => $order->id,
-                'product_id' => $product1->id,
+                'product_id' => $product->id,
                 'quantity'   => 1,
-                'unit_price' => $product1->price,
+                'unit_price' => $product->price,
             ]);
         }
 
         foreach ($orders as $order) {
             Invoice::factory()->create([
-
+                'issued_on' => now(),
+                'total_amount' => $order->totalAmount,
+                'number' => fake()->unique()->numberBetween(1, 100),
+                'order_id' => $order->id,
+                'trader_id' => 1,
+                'wholesale_store_id' => 1,
             ]);
         }
     }

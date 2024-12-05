@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\WholesaleStore\Resources;
 
-use App\Filament\Admin\Resources\InvoiceResource\Pages;
-use App\Filament\Admin\Resources\InvoiceResource\RelationManagers;
+use App\Filament\WholesaleStore\Resources\InvoiceResource\Pages;
+use App\Filament\WholesaleStore\Resources\InvoiceResource\RelationManagers;
 use App\Models\Invoice;
 use App\Traits\HasTranslatedLabels;
 use Filament\Forms;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
