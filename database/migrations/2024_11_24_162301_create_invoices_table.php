@@ -25,6 +25,10 @@ return new class extends Migration
                 ->constrained('traders')
                 ->cascadeOnDelete();
 
+            $table->foreignId('wholesale_store_id')
+                ->constrained('')
+                ->cascadeOnDelete();
+
             $table->timestamps();
         });
     }

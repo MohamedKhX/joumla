@@ -7,11 +7,13 @@ use App\Filament\Admin\Resources\InvoiceResource\RelationManagers;
 use App\Models\Invoice;
 use App\Traits\HasTranslatedLabels;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class InvoiceResource extends Resource
@@ -24,38 +26,49 @@ class InvoiceResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
-    public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                //
-            ]);
-    }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                //
-            ])
-            ->filters([
-                //
+                Tables\Columns\TextColumn::make('number')
+                    ->label('Number')
+                    ->translateLabel(),
+
+                Tables\Columns\TextColumn::make('total_amount')
+                    ->label('Total Amount')
+                    ->translateLabel()
+                    ->suffix(' د.ل'),
+
+                Tables\Columns\TextColumn::make('date')
+                    ->label('Date')
+                    ->translateLabel(),
+
+                Tables\Columns\TextColumn::make('date')
+                    ->label('Date')
+                    ->translateLabel(),
+
+                Tables\Columns\TextColumn::make('trader.name')
+                    ->label('The buyer')
+                    ->translateLabel(),
+
+                Tables\Columns\TextColumn::make('wholesale_store.name')
+                    ->label('The seller')
+                    ->translateLabel(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 
-    public static function getRelations(): array
+    public static function canCreate(): bool
     {
-        return [
-            //
-        ];
+        return false;
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return false;
     }
 
     public static function getPages(): array

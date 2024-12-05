@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->string('state');
+            $table->enum('state', \App\Enums\OrderStateEnum::values());
 
             $table->foreignId('trader_id')
                 ->constrained('traders')

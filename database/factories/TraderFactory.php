@@ -19,11 +19,9 @@ class TraderFactory extends Factory
     {
         return [
             'store_name' => $this->faker->name(),
-            'location_latitude' => $this->faker->latitude(),
-            'location_longitude' => $this->faker->longitude(),
-            'phone' => $this->faker->phoneNumber(),
-            'city' => $this->faker->city(),
-            'address' => $this->faker->address(),
+            'phone'      => $this->faker->phoneNumber(),
+            'city'       => $this->faker->city(),
+            'address'    => $this->faker->address(),
             'store_type' => $this->faker->randomElement(StoreTypeEnum::values())
         ];
     }

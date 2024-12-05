@@ -85,41 +85,34 @@ class TraderResource extends Resource
                             ->icon('heroicon-m-eye')
                             ->iconPosition(IconPosition::After)
                             ->schema([
-                                SpatieMediaLibraryImageEntry::make('avatar')
+                                SpatieMediaLibraryImageEntry::make('user.avatar')
                                     ->label('Avatar')
                                     ->translateLabel()
                                     ->collection('avatar')
                                     ->conversion('thumb')
                                     ->circular()
-                                    ->url(fn($record) => $record->getFirstMediaUrl('avatar'), true),
+                                    ->url(fn($record) => $record->user->getFirstMediaUrl('avatar'), true),
 
                                 Fieldset::make('Info')
                                     ->translateLabel()
                                     ->schema([
-                                        TextEntry::make('full_name')
-                                            ->label('Name')
+                                        TextEntry::make('user.name')
+                                            ->label('Trader Name')
                                             ->translateLabel(),
 
-                                        TextEntry::make('avgRating')
-                                            ->label('Rating')
-                                            ->translateLabel()
-                                            ->formatStateUsing(fn($state) => $state->translate())
-                                            ->badge()
-                                            ->color('success'),
+                                        TextEntry::make('store_name')
+                                            ->label('Store Name')
+                                            ->translateLabel(),
 
-                                        TextEntry::make('type')
-                                            ->label('Type')
-                                            ->translateLabel()
-                                            ->badge()
-                                            ->color('success')
-                                            ->formatStateUsing(fn ($state) => $state->translate()),
+                                        TextEntry::make('user.email')
+                                            ->label('Trader Email')
+                                            ->translateLabel(),
 
                                         TextEntry::make('tags.name')
                                             ->label('Tags')
                                             ->translateLabel()
                                             ->badge()
                                             ->color('success'),
-
                                     ])
                                     ->columns(4),
                             ])
@@ -130,6 +123,11 @@ class TraderResource extends Resource
 
 
     public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canView(Model $record): bool
     {
         return false;
     }

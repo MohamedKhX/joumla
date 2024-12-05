@@ -37,11 +37,11 @@ class WholesaleStoreResource extends Resource
                     ->translateLabel()
                     ->schema([
                         TextInput::make('name')
-                            ->label('Wholesale Name')
+                            ->label('Wholesale Store Name')
                             ->translateLabel()
                             ->required()
                             ->maxLength(100)
-                            ->suffixIcon('heroicon-m-globe-alt')
+                            ->suffixIcon('tabler-building-store')
                             ->columnSpan(2),
 
                         TextInput::make('city')
@@ -66,45 +66,40 @@ class WholesaleStoreResource extends Resource
                             ->translateLabel()
                             ->options(WholesaleStoreEnum::getTranslations())
                             ->required()
-                            ->suffixIcon('heroicon-m-globe-alt')
+                            ->suffixIcon('tabler-brand-storj')
                             ->columnSpan(1),
 
-                        TextInput::make('address')
-                            ->label('Address')
+                        TextInput::make('phone')
+                            ->label('Phone')
                             ->translateLabel()
                             ->required()
-                            ->maxLength(100)
-                            ->suffixIcon('heroicon-m-globe-alt')
+                            ->minLength(10)
+                            ->maxLength(10)
+                            ->suffixIcon('tabler-phone-call')
                             ->columnSpan(1),
 
-                        Map::make('location')
-                            ->label('Location')
-                            ->columnSpanFull()
-                            ->defaultLocation(latitude: 40.4168, longitude: -3.7038)
-                            ->afterStateUpdated(function (Set $set, ?array $state): void {
-                                $set('latitude',  $state['lat']);
-                                $set('longitude', $state['lng']);
-                            })
-                            ->extraStyles([
-                                'min-height: 50vh',
-                                'border-radius: 5px'
-                            ])
-                            ->showMarker()
-                            ->markerColor("#22c55eff")
-                            ->boundaries(true,49,11.1,61.0,2.1)
-                            ->geoManPosition('topleft')
-                            ->drawCircleMarker()
-                            ->rotateMode()
-                            ->drawMarker()
-                            ->drawPolygon()
-                            ->drawPolyline()
-                            ->drawCircle()
-                            ->dragMode()
-                            ->cutPolygon()
-                            ->editPolygon()
-                            ->deleteLayer()
-                            ->setColor('#3388ff')
-                            ->setFilledColor('#cad9ec')
+                        Fieldset::make('user')
+                            ->relationship('user')
+                            ->schema([
+                                TextInput::make('email')
+                                    ->label('Email')
+                                    ->translateLabel()
+                                    ->required()
+                                    ->maxLength(100)
+                                    ->email()
+                                    ->unique('users', ignoreRecord: true)
+                                    ->columnSpan(2),
+
+                                TextInput::make('password')
+                                    ->label('Password')
+                                    ->translateLabel()
+                                    ->required()
+                                    ->maxLength(100)
+                                    ->password()
+                                    ->columnSpan(2)
+                                    ->disabledOn('edit')
+                                    ->hiddenOn('edit'),
+                            ]),
                     ])
             ]);
     }
@@ -143,12 +138,6 @@ class WholesaleStoreResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
 
     public static function getPages(): array
     {

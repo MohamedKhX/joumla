@@ -20,8 +20,7 @@ class WholesaleStoreFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'phone' => $this->faker->phoneNumber(),
-            'location_latitude' => $this->faker->latitude(),
-            'location_longitude' => $this->faker->longitude(),
+
             'city' => $this->faker->city(),
             'address' => $this->faker->address(),
             'type' => $this->faker->randomElement(WholesaleStoreEnum::values())

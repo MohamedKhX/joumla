@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\OrderStateEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,8 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'data' => now(),
+            'state' => $this->faker->randomElement(OrderStateEnum::values()),
         ];
     }
 }
