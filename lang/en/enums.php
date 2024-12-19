@@ -4,6 +4,7 @@
 return [
     'store_type_enum' => [
         \App\Enums\StoreTypeEnum::COMPUTER_STORE->value => 'متجر الحواسيب',
+        \App\Enums\StoreTypeEnum::SUPERMARKET->value => 'سوبر ماركت',
         \App\Enums\StoreTypeEnum::GROCERY->value => 'متجر البقالة',
         \App\Enums\StoreTypeEnum::ELECTRONICS->value => 'متجر الإلكترونيات',
         \App\Enums\StoreTypeEnum::CLOTHING->value => 'متجر الملابس',

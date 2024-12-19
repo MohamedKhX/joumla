@@ -33,10 +33,16 @@
     "Images": "الصور",
     "Phone": "رقم الهاتف",
     "Invoice Number": "رقم الفاتورة",
+    "Is Active": "مفعل؟",
+    "License": "الترخيص",
+    "Logo": "الشعار",
+    "De Activate": "إلغاء التفعيل",
+    "Activate": "تفعيل",
     "Download": "تحميل",
     "Print": "طباعة",
     "Total Amount": "التكلفة الكلية",
     "Issued On": "تاريخ الإصدار",
-    "Wholesale Store Information": "المعلومات"
+    "Wholesale Store Information": "المعلومات",
+    "Trader Information": "المعلومات"
 }
 

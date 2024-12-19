@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('phone', 20)->nullable();
             $table->string('city', 100)->nullable();
             $table->string('address', 255)->nullable();
-
+            $table->boolean('is_active')->default(false);
             $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });

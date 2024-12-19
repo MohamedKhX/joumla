@@ -2,11 +2,17 @@
 
 namespace App\Filament\Admin\Resources;
 
+use App\Enums\StoreTypeEnum;
+use App\Enums\WholesaleStoreEnum;
 use App\Filament\Admin\Resources\TraderResource\Pages;
 use App\Filament\Admin\Resources\TraderResource\RelationManagers;
+use App\Mail\StoreActive;
 use App\Models\Trader;
 use App\Traits\HasTranslatedLabels;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
@@ -14,12 +20,14 @@ use Filament\Infolists\Components\Tabs;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Mail;
 
 class TraderResource extends Resource
 {
@@ -33,8 +41,94 @@ class TraderResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form->schema([]);
+        return $form
+            ->schema([
+                \Filament\Forms\Components\Fieldset::make('trader_information')
+                    ->label('Trader Information')
+                    ->translateLabel()
+                    ->schema([
+                        TextInput::make('store_name')
+                            ->label('Store Name')
+                            ->translateLabel()
+                            ->required()
+                            ->maxLength(100)
+                            ->suffixIcon('tabler-building-store')
+                            ->columnSpan(2),
+
+                        TextInput::make('city')
+                            ->label('City')
+                            ->translateLabel()
+                            ->required()
+                            ->maxLength(100)
+                            ->suffixIcon('heroicon-m-globe-alt')
+                            ->columnSpan(1),
+
+                        TextInput::make('address')
+                            ->label('Address')
+                            ->translateLabel()
+                            ->required()
+                            ->maxLength(100)
+                            ->suffixIcon('heroicon-m-globe-alt')
+                            ->columnSpan(1),
+
+                        //select box for the type
+                        Select::make('store_type')
+                            ->label('Wholesale Store Type')
+                            ->translateLabel()
+                            ->options(StoreTypeEnum::getTranslations())
+                            ->required()
+                            ->suffixIcon('tabler-brand-storj')
+                            ->columnSpan(1),
+
+                        TextInput::make('phone')
+                            ->label('Phone')
+                            ->translateLabel()
+                            ->required()
+                            ->minLength(10)
+                            ->maxLength(10)
+                            ->suffixIcon('tabler-phone-call')
+                            ->columnSpan(1),
+
+                        SpatieMediaLibraryFileUpload::make('logo')
+                            ->label('Logo')
+                            ->translateLabel()
+                            ->collection('logo')
+                            ->columnSpan(2),
+
+                        SpatieMediaLibraryFileUpload::make('license')
+                            ->label('License')
+                            ->translateLabel()
+                            ->collection('license')
+                            ->columnSpan(2),
+
+                        \Filament\Forms\Components\Fieldset::make('user')
+                            ->label('User')
+                            ->translateLabel()
+                            ->relationship('user')
+                            ->schema([
+                                TextInput::make('email')
+                                    ->label('Email')
+                                    ->translateLabel()
+                                    ->required()
+                                    ->maxLength(100)
+                                    ->email()
+                                    ->unique('users', ignoreRecord: true)
+                                    ->columnSpan(2),
+
+                                TextInput::make('password')
+                                    ->label('Password')
+                                    ->translateLabel()
+                                    ->required()
+                                    ->maxLength(100)
+                                    ->password()
+                                    ->columnSpan(2)
+                                    ->disabledOn('edit')
+                                    ->hiddenOn('edit'),
+                            ]),
+                    ])
+            ]);
     }
+
 
     public static function table(Table $table): Table
     {
@@ -46,16 +140,31 @@ class TraderResource extends Resource
                     ->searchable()
                     ->icon('tabler-user-hexagon'),
 
-                Tables\Columns\TextColumn::make('user.email')
+                /*Tables\Columns\TextColumn::make('user.email')
                     ->label('Trader Email')
                     ->translateLabel()
-                    ->icon('heroicon-o-at-symbol'),
+                    ->icon('heroicon-o-at-symbol'),*/
 
                 Tables\Columns\TextColumn::make('store_name')
                     ->label('Store Name')
                     ->translateLabel()
                     ->searchable()
                     ->icon('tabler-building-store'),
+
+                Tables\Columns\TextColumn::make('is_active')
+                    ->label('Is Active')
+                    ->translateLabel()
+                    ->searchable()
+                    ->badge()
+                    ->color(function ($state) {
+                        if($state) {
+                            return Color::Green;
+                        }
+
+                        return Color::Red;
+                    })
+                    ->formatStateUsing(fn($state) => $state ? 'مفعل' : 'ليس مفعل')
+                    ->icon('tabler-activity-heartbeat'),
 
                 Tables\Columns\TextColumn::make('phone')
                     ->label('Store Phone')
@@ -71,6 +180,37 @@ class TraderResource extends Resource
             ])
             ->actions([
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('activate')
+                    ->label('Activate')
+                    ->translateLabel()
+                    ->action(function ($record) {
+                        $record->is_active = true;
+                        $record->save();
+                        Mail::to($record->user->email)
+                            ->send(new StoreActive());
+                    })
+                    ->requiresConfirmation()
+                    ->icon('tabler-activity')
+                    ->hidden(fn($record) => $record->is_active),
+
+                 Tables\Actions\Action::make('de_activate')
+                     ->label('De Activate')
+                     ->translateLabel()
+                     ->icon('tabler-activity')
+                     ->action(function ($record) {
+                         $record->is_active = false;
+                         $record->save();
+
+                     })
+                     ->color(Color::Orange)
+                     ->hidden(fn($record) => ! $record->is_active),
+
+                Tables\Actions\Action::make('license')
+                    ->label('License')
+                    ->translateLabel()
+                    ->icon('tabler-license')
+                    ->url(fn($record) => $record->licenseUrl(), true)
+                    ->color(Color::Indigo)
             ]);
     }
 
@@ -122,17 +262,7 @@ class TraderResource extends Resource
     }
 
 
-    public static function canCreate(): bool
-    {
-        return false;
-    }
-
     public static function canView(Model $record): bool
-    {
-        return false;
-    }
-
-    public static function canEdit(Model $record): bool
     {
         return false;
     }
