@@ -3,42 +3,56 @@
 namespace App\Models;
 
 use App\Enums\OrderStateEnum;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Order extends Model
 {
     use HasFactory;
-
-    protected $casts = [
-        'state' => OrderStateEnum::class
+    protected $fillable = [
+        'number',
+        'date',
+        'state',
+        'trader_id',
+        'wholesale_store_id',
     ];
 
-    protected $guarded = [];
+    protected $casts = [
+        'date' => 'date',
+        'state' => OrderStateEnum::class,
+    ];
+
+    public function trader(): BelongsTo
+    {
+        return $this->belongsTo(Trader::class);
+    }
+
+    public function wholesaleStore(): BelongsTo
+    {
+        return $this->belongsTo(WholesaleStore::class);
+    }
 
     public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
     }
 
-    public function invoice(): HasOne
+    protected static function boot()
     {
-        return $this->hasOne(Invoice::class);
+        parent::boot();
+
+        static::creating(function ($order) {
+            //$order->wholesale_store_id = auth()->user()->wholesaleStore->id;
+            $order->number = 'ORD-' . str_pad((Order::max('id') ?? 0) + 1, 6, '0', STR_PAD_LEFT);
+        });
     }
 
-    public function totalAmount(): Attribute
+    public function getTotalAmountAttribute(): float
     {
-        return Attribute::get(function () {
-            $total = 0;
-
-            $this->items->each(function (OrderItem $item) use(&$total) {
-                $total += $item->total_amount;
-            });
-
-            return $total;
+        return $this->items->sum(function ($item) {
+            return $item->quantity * $item->unit_price;
         });
     }
 }

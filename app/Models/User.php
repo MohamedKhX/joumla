@@ -58,6 +58,11 @@ class User extends Authenticatable implements HasMedia
         return $this->hasOne(Trader::class);
     }
 
+    public function wholesaleStore(): HasOne
+    {
+        return $this->hasOne(WholesaleStore::class);
+    }
+
     public function registerMediaCollections(): void
     {
         $this

@@ -23,6 +23,7 @@ use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -134,6 +135,12 @@ class TraderResource extends Resource
     {
         return $table
             ->columns([
+                SpatieMediaLibraryImageColumn::make('logo')
+                    ->collection('logo')
+                    ->label("Logo")
+                    ->translateLabel()
+                    ->circular(),
+
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Trader Name')
                     ->translateLabel()

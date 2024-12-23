@@ -71,4 +71,10 @@ return [
         \App\Enums\WholesaleStoreEnum::CHEMICALS->value => 'المواد الكيميائية',
         \App\Enums\WholesaleStoreEnum::JEWELRY->value => 'المجوهرات',
     ],
+    'order_state_enum' => [
+        \App\Enums\OrderStateEnum::Pending->value => 'معلق',
+        \App\Enums\OrderStateEnum::Rejected->value => 'مرفوض',
+        \App\Enums\OrderStateEnum::Cancelled->value => 'ملغى',
+        \App\Enums\OrderStateEnum::Approved->value => 'موافق عليه',
+    ]
 ];

@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\WholesaleStore\Pages\SubscriptionExpired;
 use App\Filament\WholesaleStore\Reports;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -18,6 +19,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use App\Http\Middleware\CheckWholesaleStoreSubscription;
 
 class WholesaleStorePanelProvider extends PanelProvider
 {
@@ -33,7 +35,8 @@ class WholesaleStorePanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/WholesaleStore/Resources'), for: 'App\\Filament\\WholesaleStore\\Resources')
             ->discoverPages(in: app_path('Filament/WholesaleStore/Pages'), for: 'App\\Filament\\WholesaleStore\\Pages')
             ->pages([
-                Reports::class
+                Reports::class,
+                SubscriptionExpired::class,
             ])
             ->discoverWidgets(in: app_path('Filament/WholesaleStore/Widgets'), for: 'App\\Filament\\WholesaleStore\\Widgets')
             ->widgets([
@@ -50,6 +53,7 @@ class WholesaleStorePanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                CheckWholesaleStoreSubscription::class,
             ])
             ->authMiddleware([
                 Authenticate::class,

@@ -10,12 +10,14 @@ use App\Traits\HasTranslatedLabels;
 use Dotswan\MapPicker\Fields\Map;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
@@ -69,7 +71,19 @@ class WholesaleStoreResource extends Resource
                             ->options(WholesaleStoreEnum::getTranslations())
                             ->required()
                             ->suffixIcon('tabler-brand-storj')
-                            ->columnSpan(1),
+                            ->columnSpan(2),
+
+                        SpatieMediaLibraryFileUpload::make('logo')
+                            ->label('Logo')
+                            ->translateLabel()
+                            ->collection('logo')
+                            ->columnSpan(2),
+
+                        SpatieMediaLibraryFileUpload::make('license')
+                            ->label('License')
+                            ->translateLabel()
+                            ->collection('license')
+                            ->columnSpan(2),
 
                         TextInput::make('phone')
                             ->label('Phone')
@@ -78,7 +92,7 @@ class WholesaleStoreResource extends Resource
                             ->minLength(10)
                             ->maxLength(10)
                             ->suffixIcon('tabler-phone-call')
-                            ->columnSpan(1),
+                            ->columnSpan(2),
 
                         Fieldset::make('user')
                             ->label('User')
@@ -112,6 +126,11 @@ class WholesaleStoreResource extends Resource
     {
         return $table
             ->columns([
+                SpatieMediaLibraryImageColumn::make('logo')
+                    ->label("Logo")
+                    ->translateLabel()
+                    ->circular(),
+
                 Tables\Columns\TextColumn::make('name')
                     ->label('Wholesale Store Name')
                     ->translateLabel()
@@ -139,6 +158,13 @@ class WholesaleStoreResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+
+                Tables\Actions\Action::make('license')
+                    ->label('License')
+                    ->translateLabel()
+                    ->icon('tabler-license')
+                    ->url(fn($record) => $record->licenseUrl(), true)
+                    ->color(Color::Indigo)
             ]);
     }
 

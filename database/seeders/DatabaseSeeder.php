@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create([
+        $user = User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@admin.com',
             'password' => Hash::make('password'),
@@ -27,5 +27,11 @@ class DatabaseSeeder extends Seeder
         $this->call(TraderSeeder::class);
         $this->call(WholesaleStoreSeeder::class);
         $this->call(InvoiceSeeder::class);
+
+
+        $wholesale = WholesaleStore::find(1);
+        $wholesale->update([
+            'user_id' => $user->id,
+        ]);
     }
 }
