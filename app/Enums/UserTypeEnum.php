@@ -11,4 +11,6 @@ enum UserTypeEnum: string
     case Admin = 'Admin';
     case Wholesaler = 'Wholesaler';
     case Trader = 'Trader';
+
+    case Driver = 'Driver';
 }

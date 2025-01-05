@@ -24,10 +24,13 @@ class DatabaseSeeder extends Seeder
             'type' => UserTypeEnum::Admin,
         ]);
 
+        User::factory(5)->create([
+            'type' => UserTypeEnum::Driver
+        ]);
+
         $this->call(TraderSeeder::class);
         $this->call(WholesaleStoreSeeder::class);
         $this->call(InvoiceSeeder::class);
-
 
         $wholesale = WholesaleStore::find(1);
         $wholesale->update([

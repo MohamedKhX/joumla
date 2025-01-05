@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->enum('type', \App\Enums\UserTypeEnum::values())
                 ->default(UserTypeEnum::Trader);
+
+            $table->string('phone')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
