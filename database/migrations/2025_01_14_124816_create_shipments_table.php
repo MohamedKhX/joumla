@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\OrderStateEnum;
+use App\Enums\ShipmentStateEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,22 +13,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('shipments', function (Blueprint $table) {
             $table->id();
             $table->date('date');
             $table->string('number')->unique();
-            $table->enum('state', OrderStateEnum::values())
-                ->default(OrderStateEnum::Pending->value);
+            $table->enum('state', ShipmentStateEnum::values())
+                ->default(ShipmentStateEnum::Pending->value);
 
             $table->decimal('total_amount')->nullable();
 
+            $table->foreignId('driver_id')
+                ->nullable()
+                ->constrained('users')
+                ->cascadeOnDelete();
 
             $table->foreignId('trader_id')
                 ->constrained('traders')
-                ->cascadeOnDelete();
-
-            $table->foreignId('wholesale_store_id')
-                ->constrained('wholesale_stores')
                 ->cascadeOnDelete();
 
             $table->timestamps();
@@ -39,6 +40,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('shipments');
     }
 };

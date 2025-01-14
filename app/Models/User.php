@@ -29,6 +29,8 @@ class User extends Authenticatable implements HasMedia
         'password',
     ];
 
+    protected $with = ['trader'];
+
     /**
      * The attributes that should be hidden for serialization.
      *

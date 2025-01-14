@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 /**
  * @mixin Model
  * */
-class HasUniqueNumber
+trait HasUniqueNumber
 {
     protected static function bootHasUniqueNumber(): void
     {

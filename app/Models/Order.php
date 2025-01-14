@@ -2,22 +2,21 @@
 
 namespace App\Models;
 
+use App\Contracts\HasUniqueNumberInterface;
 use App\Enums\OrderStateEnum;
+use App\Traits\HasUniqueNumber;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Order extends Model
+class Order extends Model implements HasUniqueNumberInterface
 {
-    use HasFactory;
-    protected $fillable = [
-        'number',
-        'date',
-        'state',
-        'trader_id',
-        'wholesale_store_id',
-    ];
+    use HasFactory,
+        HasUniqueNumber;
+
+   protected $guarded = [];
 
     protected $casts = [
         'date' => 'date',
@@ -54,5 +53,15 @@ class Order extends Model
         return $this->items->sum(function ($item) {
             return $item->quantity * $item->unit_price;
         });
+    }
+
+    public function shipments(): BelongsToMany
+    {
+        return $this->belongsToMany(Shipment::class, 'shipment_order');
+    }
+
+    public function getNumberPrefix(): string
+    {
+        return 'ORD-';
     }
 }
