@@ -17,9 +17,6 @@ class WholesaleStore extends Model implements HasMedia
 
     protected $guarded = [];
 
-    protected $casts = [
-        'type' => WholesaleStoreEnum::class
-    ];
 
     public function products(): HasMany
     {
@@ -39,6 +36,11 @@ class WholesaleStore extends Model implements HasMedia
     public function licenseUrl(): ?string
     {
         return $this->getMedia('license')->first()?->getUrl();
+    }
+
+    public function wholesaleStoreType(): BelongsTo
+    {
+        return $this->belongsTo(WholesaleStoreType::class);
     }
 
     public function registerMediaCollections():void

@@ -5,7 +5,9 @@ namespace App\Filament\Admin\Resources;
 use App\Enums\WholesaleStoreEnum;
 use App\Filament\Resources\WholesaleStoreResource\Pages;
 use App\Filament\Resources\WholesaleStoreResource\RelationManagers;
+use App\Models\Trader;
 use App\Models\WholesaleStore;
+use App\Models\WholesaleStoreType;
 use App\Traits\HasTranslatedLabels;
 use Dotswan\MapPicker\Fields\Map;
 use Filament\Forms\Components\Fieldset;
@@ -65,10 +67,10 @@ class WholesaleStoreResource extends Resource
                             ->columnSpan(1),
 
                         //select box for the type
-                        Select::make('type')
+                        Select::make('wholesale_store_type_id')
                             ->label('Wholesale Store Type')
                             ->translateLabel()
-                            ->options(WholesaleStoreEnum::getTranslations())
+                            ->options(WholesaleStoreType::all()->pluck('name', 'id')->toArray())
                             ->required()
                             ->suffixIcon('tabler-brand-storj')
                             ->columnSpan(2),
@@ -147,14 +149,13 @@ class WholesaleStoreResource extends Resource
                     ->translateLabel()
                     ->icon('tabler-phone-call'),
 
-                Tables\Columns\TextColumn::make('type')
+                Tables\Columns\TextColumn::make('wholesaleStoreType.name')
                     ->label('Wholesale Store Type')
                     ->translateLabel()
                     ->icon('tabler-brand-storj')
                     ->badge()
-                    ->color(Color::Red)
-                    ->formatStateUsing(fn($state) => $state->translate()),
-            ])
+                    ->color(Color::Red),
+                ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
@@ -164,7 +165,23 @@ class WholesaleStoreResource extends Resource
                     ->translateLabel()
                     ->icon('tabler-license')
                     ->url(fn($record) => $record->licenseUrl(), true)
-                    ->color(Color::Indigo)
+                    ->color(Color::Indigo),
+
+                Tables\Actions\Action::make('change_password')
+                    ->label('Change Password')
+                    ->translateLabel()
+                    ->icon('tabler-key')
+                    ->form([
+                        TextInput::make('password')
+                            ->label('Password')
+                            ->translateLabel()
+                            ->required()
+                            ->password(),
+                    ])
+                    ->action(function (WholesaleStore $wholesaleStore) {
+                        $wholesaleStore->user->password = bcrypt(request('password'));
+                        $wholesaleStore->user->save();
+                    }),
             ]);
     }
 

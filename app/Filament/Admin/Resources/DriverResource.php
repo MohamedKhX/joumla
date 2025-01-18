@@ -9,6 +9,7 @@ use App\Models\Driver;
 use App\Models\User;
 use App\Traits\HasTranslatedLabels;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -39,7 +40,6 @@ class DriverResource extends Resource
                             ->required()
                             ->autofocus(),
 
-
                         Forms\Components\TextInput::make('email')
                             ->label('Email')
                             ->translateLabel()
@@ -58,6 +58,24 @@ class DriverResource extends Resource
                             ->translateLabel()
                             ->required()
                             ->password(),
+
+                        SpatieMediaLibraryFileUpload::make('car_image')
+                            ->label('Car Image')
+                            ->translateLabel()
+                            ->collection('car_image')
+                            ->required(),
+
+                        SpatieMediaLibraryFileUpload::make('target_image')
+                            ->label('Target Image')
+                            ->translateLabel()
+                            ->collection('target_image')
+                            ->required(),
+
+                        SpatieMediaLibraryFileUpload::make('license_image')
+                            ->label('License Image')
+                            ->translateLabel()
+                            ->collection('license_image')
+                            ->required(),
 
                         Forms\Components\Hidden::make('type')
                             ->default(UserTypeEnum::Driver->value),
@@ -87,7 +105,23 @@ class DriverResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+                Tables\Actions\DeleteAction::make(),
+
+                Tables\Actions\Action::make('change_password')
+                    ->label('Change Password')
+                    ->translateLabel()
+                    ->icon('tabler-key')
+                    ->form([
+                        Forms\Components\TextInput::make('password')
+                            ->label('Password')
+                            ->translateLabel()
+                            ->required()
+                            ->password(),
+                    ])
+                    ->action(fn (User $user) => $user->update([
+                        'password' => bcrypt(request('password')),
+                    ])),
+
             ]);
     }
 

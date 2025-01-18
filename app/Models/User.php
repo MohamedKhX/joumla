@@ -18,16 +18,7 @@ class User extends Authenticatable implements HasMedia
         InteractsWithMedia,
         HasApiTokens;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $guarded = [];
 
     protected $with = ['trader'];
 
@@ -63,6 +54,11 @@ class User extends Authenticatable implements HasMedia
     public function wholesaleStore(): HasOne
     {
         return $this->hasOne(WholesaleStore::class);
+    }
+
+    public function driver(): HasOne
+    {
+        return $this->hasOne(Driver::class);
     }
 
     public function registerMediaCollections(): void

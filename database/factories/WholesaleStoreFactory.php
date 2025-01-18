@@ -23,7 +23,7 @@ class WholesaleStoreFactory extends Factory
 
             'city' => $this->faker->city(),
             'address' => $this->faker->address(),
-            'type' => $this->faker->randomElement(WholesaleStoreEnum::values())
+            'wholesale_store_type_id' => $this->faker->randomElement([1,2,3,4,5,6,7,8,9,10])
         ];
     }
 }

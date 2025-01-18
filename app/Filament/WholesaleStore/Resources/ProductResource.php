@@ -7,6 +7,7 @@ use App\Filament\WholesaleStore\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
 use App\Traits\HasTranslatedLabels;
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -58,6 +59,12 @@ class ProductResource extends Resource
                             ->numeric()
                             ->minValue(0),
 
+                        DatePicker::make('expire_date')
+                            ->label('Expire Date')
+                            ->translateLabel()
+                            ->nullable()
+                            ->date(),
+
                         SpatieMediaLibraryFileUpload::make('images')
                             ->label('Images')
                             ->translateLabel()
@@ -94,7 +101,12 @@ class ProductResource extends Resource
                     ->translateLabel()
                     ->badge()
                     ->suffix(' د.ل'),
-            ])
+
+                Tables\Columns\TextColumn::make('expire_date')
+                    ->label('Expire Date')
+                    ->translateLabel()
+                    ->date(),
+                ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

@@ -18,7 +18,6 @@ class Reports extends Dashboard
         return [
             ReportsOverview::class,
             OrdersChart::class,
-            StoreTypesChart::class,
             RevenueChart::class,
         ];
     }

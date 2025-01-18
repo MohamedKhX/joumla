@@ -11,15 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('wholesale_stores', function (Blueprint $table) {
+        Schema::create('drivers', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 100);
-            $table->string('city', 100);
-            $table->string('address', 100);
-            $table->string('phone');
-
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('wholesale_store_type_id');
             $table->timestamps();
         });
     }
@@ -29,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('wholesale_stores');
+        Schema::dropIfExists('drivers');
     }
 };

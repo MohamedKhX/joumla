@@ -17,9 +17,6 @@ class Trader extends Model implements HasMedia
 
     protected $guarded = [];
 
-    protected $casts = [
-        'store_type' => StoreTypeEnum::class
-    ];
 
     public function user(): BelongsTo
     {
@@ -34,6 +31,11 @@ class Trader extends Model implements HasMedia
     public function licenseUrl(): ?string
     {
         return $this->getMedia('license')->first()?->getUrl();
+    }
+
+    public function traderType(): BelongsTo
+    {
+        return $this->belongsTo(TraderType::class);
     }
 
     public function registerMediaCollections():void

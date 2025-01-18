@@ -8,6 +8,8 @@ use App\Filament\Admin\Resources\TraderResource\Pages;
 use App\Filament\Admin\Resources\TraderResource\RelationManagers;
 use App\Mail\StoreActive;
 use App\Models\Trader;
+use App\Models\TraderType;
+use App\Models\User;
 use App\Traits\HasTranslatedLabels;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
@@ -38,7 +40,7 @@ class TraderResource extends Resource
 
     protected static ?string $navigationIcon = 'tabler-user-hexagon';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {
@@ -73,10 +75,10 @@ class TraderResource extends Resource
                             ->columnSpan(1),
 
                         //select box for the type
-                        Select::make('store_type')
-                            ->label('Wholesale Store Type')
+                        Select::make('trader_type_id')
+                            ->label('Trader Type')
                             ->translateLabel()
-                            ->options(StoreTypeEnum::getTranslations())
+                            ->options(TraderType::all()->pluck('name', 'id')->toArray())
                             ->required()
                             ->suffixIcon('tabler-brand-storj')
                             ->columnSpan(1),
@@ -178,15 +180,15 @@ class TraderResource extends Resource
                     ->translateLabel()
                     ->icon('tabler-phone-call'),
 
-                Tables\Columns\TextColumn::make('store_type')
+                Tables\Columns\TextColumn::make('traderType.name')
                     ->label('Store Type')
                     ->translateLabel()
                     ->icon('tabler-brand-storj')
-                    ->badge()
-                    ->formatStateUsing(fn($state) => $state->translate()),
+                    ->badge(),
             ])
             ->actions([
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('activate')
                     ->label('Activate')
                     ->translateLabel()
@@ -217,7 +219,23 @@ class TraderResource extends Resource
                     ->translateLabel()
                     ->icon('tabler-license')
                     ->url(fn($record) => $record->licenseUrl(), true)
-                    ->color(Color::Indigo)
+                    ->color(Color::Indigo),
+
+                Tables\Actions\Action::make('change_password')
+                    ->label('Change Password')
+                    ->translateLabel()
+                    ->icon('tabler-key')
+                    ->form([
+                        Forms\Components\TextInput::make('password')
+                            ->label('Password')
+                            ->translateLabel()
+                            ->required()
+                            ->password(),
+                    ])
+                    ->action(function (Trader $trader) {
+                        $trader->user->password = bcrypt(request('password'));
+                        $trader->user->save();
+                    }),
             ]);
     }
 

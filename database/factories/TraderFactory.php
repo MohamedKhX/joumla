@@ -22,7 +22,7 @@ class TraderFactory extends Factory
             'phone'      => $this->faker->phoneNumber(),
             'city'       => $this->faker->city(),
             'address'    => $this->faker->address(),
-            'store_type' => $this->faker->randomElement(StoreTypeEnum::values())
+            'trader_type_id' => $this->faker->randomElement([1,2,3,4,5,6,7,8,9,10])
         ];
     }
 }

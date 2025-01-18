@@ -14,12 +14,16 @@ return new class extends Migration
         Schema::create('traders', function (Blueprint $table) {
             $table->id();
             $table->string('store_name', 100);
-            $table->enum('store_type', \App\Enums\StoreTypeEnum::values());
             $table->string('phone', 20)->nullable();
             $table->string('city', 100)->nullable();
             $table->string('address', 255)->nullable();
             $table->boolean('is_active')->default(false);
+
+            $table->decimal('location_latitude', 10, 8)->nullable();
+            $table->decimal('location_longitude', 10, 8)->nullable();
+
             $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('trader_type_id');
             $table->timestamps();
         });
     }

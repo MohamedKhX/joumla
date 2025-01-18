@@ -23,6 +23,8 @@ class WholesaleStoreSubscriptionResource extends Resource
     protected static ?string $model = WholesaleStoreSubscription::class;
 
     protected static ?string $navigationIcon = 'tabler-cash';
+    protected static ?int $navigationSort = 2;
+
 
     public static function form(Form $form): Form
     {

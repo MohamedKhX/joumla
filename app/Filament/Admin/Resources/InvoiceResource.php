@@ -25,7 +25,7 @@ class InvoiceResource extends Resource
 
     protected static ?string $navigationIcon = 'tabler-file-invoice';
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 6;
 
 
     public static function table(Table $table): Table
@@ -34,7 +34,8 @@ class InvoiceResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('number')
                     ->label('Invoice Number')
-                    ->translateLabel(),
+                    ->translateLabel()
+                    ->searchable(),
 
                 Tables\Columns\TextColumn::make('total_amount')
                     ->label('Total Amount')
@@ -47,11 +48,13 @@ class InvoiceResource extends Resource
 
                 Tables\Columns\TextColumn::make('trader.store_name')
                     ->label('The buyer')
-                    ->translateLabel(),
+                    ->translateLabel()
+                    ->searchable(),
 
                 Tables\Columns\TextColumn::make('wholesaleStore.name')
                     ->label('The seller')
-                    ->translateLabel(),
+                    ->translateLabel()
+                    ->searchable(),
             ])
             ->actions([
                 Tables\Actions\Action::make('print')

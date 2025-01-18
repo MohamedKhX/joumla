@@ -28,6 +28,9 @@ class DatabaseSeeder extends Seeder
             'type' => UserTypeEnum::Driver
         ]);
 
+        $this->call(TraderTypeSeeder::class);
+        $this->call(WholesaleStoreTypeSeeder::class);
+        $this->call(WholesaleStoreSeeder::class);
         $this->call(TraderSeeder::class);
         $this->call(WholesaleStoreSeeder::class);
         $this->call(InvoiceSeeder::class);
