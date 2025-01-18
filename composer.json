@@ -15,7 +15,9 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "ryangjchandler/blade-tabler-icons": "^2.3",
-        "spatie/laravel-medialibrary": "^11.10"
+        "spatie/laravel-medialibrary": "^11.10",
+        "tightenco/parental": "^1.4",
+        "torgodly/html2media": "^1.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

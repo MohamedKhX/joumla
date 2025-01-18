@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\InvoiceResource\Pages;
 use App\Filament\Admin\Resources\InvoiceResource\RelationManagers;
 use App\Models\Invoice;
+use App\Tables\Actions\InvoiceAction;
 use App\Traits\HasTranslatedLabels;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
@@ -57,11 +58,18 @@ class InvoiceResource extends Resource
                     ->searchable(),
             ])
             ->actions([
-                Tables\Actions\Action::make('print')
+                InvoiceAction::make('print')
                     ->label('Print')
                     ->translateLabel()
                     ->color(Color::Teal)
-                    ->icon('heroicon-o-eye'),
+                    ->icon('heroicon-o-eye')
+                    ->invoiceItems([
+                        'number' => 'Invoice Number',
+                        'total_amount' => 'Total Amount',
+                        'issued_on' => 'Issued On',
+                        'trader.store_name' => 'The buyer',
+                        'wholesaleStore.name' => 'The seller',
+                    ]),
 
                 Tables\Actions\Action::make('download')
                     ->label('Download')
