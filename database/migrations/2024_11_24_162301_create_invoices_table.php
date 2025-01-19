@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->date('issued_on');
             $table->decimal('total_amount');
+            $table->boolean('paid')->default(false);
             $table->string('number')->unique();
 
             $table->foreignId('order_id')

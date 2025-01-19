@@ -20,6 +20,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Http\Middleware\CheckWholesaleStoreSubscription;
+use Filament\Navigation\MenuItem;
 
 class WholesaleStorePanelProvider extends PanelProvider
 {
@@ -70,6 +71,10 @@ class WholesaleStorePanelProvider extends PanelProvider
                 'purple'    => Color::Purple,
                 'teal'      => Color::Teal,
             ])
-            ->font('Rubik');
+            ->font('Rubik')
+            ->renderHook(
+                'panels::user-menu.before',
+                fn () => view('filament.notifications-trigger-button'),
+            );
     }
 }

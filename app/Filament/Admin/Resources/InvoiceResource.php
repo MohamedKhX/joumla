@@ -62,14 +62,7 @@ class InvoiceResource extends Resource
                     ->label('Print')
                     ->translateLabel()
                     ->color(Color::Teal)
-                    ->icon('heroicon-o-eye')
-                    ->invoiceItems([
-                        'number' => 'Invoice Number',
-                        'total_amount' => 'Total Amount',
-                        'issued_on' => 'Issued On',
-                        'trader.store_name' => 'The buyer',
-                        'wholesaleStore.name' => 'The seller',
-                    ]),
+                    ->icon('heroicon-o-eye'),
 
                 Tables\Actions\Action::make('download')
                     ->label('Download')

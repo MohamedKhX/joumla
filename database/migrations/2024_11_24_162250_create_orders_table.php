@@ -19,6 +19,8 @@ return new class extends Migration
             $table->enum('state', OrderStateEnum::values())
                 ->default(OrderStateEnum::Pending->value);
 
+            $table->boolean('is_deferred')->default(false);
+
             $table->decimal('total_amount')->nullable();
 
 

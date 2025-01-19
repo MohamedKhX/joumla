@@ -103,8 +103,8 @@ class OrderResource extends Resource
                             ->addActionLabel('إضافة منتج')
                             ->reorderableWithButtons()
                             ->collapsible()
-                            ->itemLabel(fn (array $state): ?string => $state['product_id'] 
-                                ? Product::find($state['product_id'])?->name 
+                            ->itemLabel(fn (array $state): ?string => $state['product_id']
+                                ? Product::find($state['product_id'])?->name
                                 : null),
                     ]),
             ]);
@@ -131,6 +131,11 @@ class OrderResource extends Resource
                     ->translateLabel()
                     ->date()
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('is_deferred')
+                    ->label('بالآجل')
+                    ->translateLabel()
+                    ->formatStateUsing(fn($state) => $state ? 'نعم' : 'لا'),
 
                 Tables\Columns\TextColumn::make('state')
                     ->label('الحالة')
