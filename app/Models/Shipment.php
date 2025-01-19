@@ -7,6 +7,7 @@ use App\Traits\HasUniqueNumber;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Shipment extends Model implements HasUniqueNumberInterface
 {
@@ -15,9 +16,9 @@ class Shipment extends Model implements HasUniqueNumberInterface
 
     protected $guarded = [];
 
-    public function orders(): BelongsToMany
+    public function orders(): HasMany
     {
-        return $this->belongsToMany(Order::class);
+        return $this->hasMany(Order::class);
     }
 
     public function getNumberPrefix(): string

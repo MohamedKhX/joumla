@@ -145,7 +145,6 @@ class OrderResource extends Resource
                         OrderStateEnum::Pending => 'warning',
                         OrderStateEnum::Approved => 'success',
                         OrderStateEnum::Rejected => 'danger',
-                        OrderStateEnum::Cancelled => 'gray',
                     })
                     ->formatStateUsing(fn ($state) => $state->translate()),
 
@@ -216,14 +215,6 @@ class OrderResource extends Resource
                 ]),
             ]);
     }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
     public static function getPages(): array
     {
         return [

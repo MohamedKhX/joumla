@@ -17,6 +17,10 @@ class Product extends Model implements HasMedia
 
     protected $guarded = [];
 
+    protected $appends = [
+        'thumbnail'
+    ];
+
     public function wholesaleStore(): BelongsTo
     {
         return $this->belongsTo(WholesaleStore::class);
@@ -25,7 +29,7 @@ class Product extends Model implements HasMedia
     public function thumbnail(): Attribute
     {
         return Attribute::get(function () {
-            return $this->getMedia('thumbnails')->first()->getUrl();
+            return $this->getFirstMediaUrl('thumbnail');
         });
     }
 

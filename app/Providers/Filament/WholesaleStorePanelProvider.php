@@ -72,9 +72,6 @@ class WholesaleStorePanelProvider extends PanelProvider
                 'teal'      => Color::Teal,
             ])
             ->font('Rubik')
-            ->renderHook(
-                'panels::user-menu.before',
-                fn () => view('filament.notifications-trigger-button'),
-            );
+            ->databaseNotifications();
     }
 }

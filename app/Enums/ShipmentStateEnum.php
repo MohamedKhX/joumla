@@ -7,9 +7,7 @@ use App\Traits\Enum;
 enum ShipmentStateEnum: string
 {
     use Enum;
-
-    case Pending = 'Pending';
-    case Cancelled = 'Cancelled';
-    case Approved = 'Approved';
+    case WaitingForShipping = 'Waiting For Shipping';
+    case Shipping = 'Shipping';
     case Shipped = 'Shipped';
 }

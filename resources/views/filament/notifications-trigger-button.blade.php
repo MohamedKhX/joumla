@@ -5,11 +5,11 @@
                 class="relative flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-500/5 focus:bg-gray-500/5 focus:outline-none"
             >
                 <x-heroicon-o-bell class="w-5 h-5" />
-                
+
                 @php
                     $unreadCount = auth()->user()->unreadNotifications()->count();
                 @endphp
-                
+
                 @if($unreadCount > 0)
                     <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
                         {{ $unreadCount }}
@@ -27,7 +27,6 @@
                 <x-filament::dropdown.list.item
                     :color="is_null($notification->read_at) ? 'primary' : 'gray'"
                     class="flex items-center gap-3 py-3"
-                    :href="isset($notification->data['order_id']) ? route('filament.wholesale-store.resources.orders.view', ['record' => $notification->data['order_id']]) : '#'"
                 >
                     <div class="flex-1 space-y-1">
                         <p class="text-sm font-medium">
@@ -57,4 +56,4 @@
             @endif
         </x-filament::dropdown.list>
     </x-filament::dropdown>
-</div> 
+</div>

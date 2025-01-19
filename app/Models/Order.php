@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Contracts\HasUniqueNumberInterface;
 use App\Enums\OrderStateEnum;
 use App\Traits\HasUniqueNumber;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,6 +23,10 @@ class Order extends Model implements HasUniqueNumberInterface
         HasUniqueNumber;
 
    protected $guarded = [];
+
+   protected $appends = [
+       'shipmentState'
+   ];
 
     protected $casts = [
         'date' => 'date',
@@ -58,28 +63,28 @@ class Order extends Model implements HasUniqueNumberInterface
         });
 
         // When order is updated
-        static::updated(function ($order) {
+      /*  static::updated(function ($order) {
             if ($order->wasChanged('state')) {
                 switch ($order->state) {
                     case OrderStateEnum::Approved:
                         $order->trader->user->notify(new OrderApprovedNotification($order));
                         break;
-                        
+
                     case OrderStateEnum::DriverAccepted:
                         $order->trader->user->notify(new DriverAcceptedOrderNotification($order));
                         break;
-                        
+
                     case OrderStateEnum::PickedUp:
                         $order->trader->user->notify(new OrderPickedUpNotification($order));
                         break;
-                        
+
                     case OrderStateEnum::Delivered:
                         $order->trader->user->notify(new OrderDeliveredNotification($order));
                         $order->wholesaleStore->user->notify(new OrderDeliveredNotification($order));
                         break;
                 }
             }
-        });
+        });*/
     }
 
     public function getTotalAmountAttribute(): float
@@ -89,9 +94,16 @@ class Order extends Model implements HasUniqueNumberInterface
         });
     }
 
-    public function shipments(): BelongsToMany
+    public function shipment(): BelongsTo
     {
-        return $this->belongsToMany(Shipment::class, 'shipment_order');
+        return $this->belongsTo(Shipment::class);
+    }
+
+    public function shipmentState(): Attribute
+    {
+        return Attribute::get(function () {
+            return $this->shipment->state;
+        });
     }
 
     public function getNumberPrefix(): string

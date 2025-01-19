@@ -10,7 +10,7 @@ enum OrderStateEnum: string
 
     case Pending = 'Pending';
     case Rejected  = 'Rejected';
-    case Cancelled = 'Cancelled';
     case Approved = 'Approved';
-    case Shipped = 'Shipped';
+
+
 }

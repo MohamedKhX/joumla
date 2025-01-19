@@ -32,6 +32,11 @@ return new class extends Migration
                 ->constrained('wholesale_stores')
                 ->cascadeOnDelete();
 
+            $table->foreignId('shipment_id')
+                ->nullable()
+                ->constrained()
+                ->cascadeOnDelete();
+
             $table->timestamps();
         });
     }

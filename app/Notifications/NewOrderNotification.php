@@ -22,23 +22,10 @@ class NewOrderNotification extends Notification
 
     public function toDatabase($notifiable)
     {
-        FilamentNotification::make()
+        return FilamentNotification::make()
             ->title('طلب جديد')
             ->icon('heroicon-o-shopping-cart')
             ->body("لديك طلب جديد معلق من {$this->order->trader->store_name}")
-            ->actions([
-                \Filament\Notifications\Actions\Action::make('view')
-                    ->label('عرض الطلب')
-                    ->url(route('filament.wholesale-store.resources.orders.view', ['record' => $this->order->id]))
-                    ->button(),
-            ])
             ->getDatabaseMessage();
-
-        return [
-            'title' => 'طلب جديد',
-            'message' => "لديك طلب جديد معلق من {$this->order->trader->store_name}",
-            'order_id' => $this->order->id,
-            'type' => 'new_order',
-        ];
     }
-} 
+}
