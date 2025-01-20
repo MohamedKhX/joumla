@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Enums\StoreTypeEnum;
+use App\Enums\UserTypeEnum;
+use App\Notifications\NewTraderNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,6 +18,18 @@ class Trader extends Model implements HasMedia
         InteractsWithMedia;
 
     protected $guarded = [];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($trader) {
+            $admins = User::where('type', UserTypeEnum::Admin->value)->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new NewTraderNotification($trader));
+            }
+        });
+    }
 
 
     public function user(): BelongsTo

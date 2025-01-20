@@ -88,7 +88,8 @@ Route::post('/trader/orders', function (Request $request) {
                 'wholesale_store_id' => $orderData['wholesale_store_id'],
                 'total_amount' => collect($orderData['products'])->sum(function($product) {
                     return $product['price'] * $product['quantity'];
-                })
+                }),
+                'is_deferred' => $orderData['deferred'] ?? false,
             ]);
 
             // Create order items
@@ -148,7 +149,7 @@ Route::get('/trader/{id}/orders', function (Request $request) {
                 ],
                 'total_amount' => $order->total_amount,
                 'state' => $order->state,
-                'shipmentState' => $order->shipment->state ?? 'قيد الشحن',
+                'shipmentState' => $order?->shipment?->state,
                 'items' => $order->items->map(function ($item) {
                     return [
                         'id' => $item->id,
@@ -163,11 +164,10 @@ Route::get('/trader/{id}/orders', function (Request $request) {
     return response()->json($orders);
 });
 
-Route::get('/trader/notifications', function (Request $request) {
-    $user = $request->user();
-    $user = User::find(1);
+Route::get('/user/{id}/notifications', function (Request $request) {
+    $user = User::find($request->id);
 
-    $notifications = $user->notifications->map(function ($item) {
+    return $user->notifications->map(function ($item) {
         return [
             'id' => $item->id,
             'title' => $item->data['title'],
@@ -175,8 +175,6 @@ Route::get('/trader/notifications', function (Request $request) {
             'created_at' => $item->created_at->format('Y-m-d H:i'),
         ];
     });
-
-    return $notifications;
 });
 
 Route::post('/new/trader', function (Request $request) {
@@ -290,4 +288,107 @@ Route::post('/new/driver', function (Request $request) {
             'error' => $e->getMessage(),
         ], 500);
     }
+});
+// Add these routes to your existing routes file
+
+// Get all available shipments for drivers
+Route::get('/shipments/available', function () {
+    return Shipment::where('state', 'Approved')
+        ->where('driver_id', null)
+        ->with(['orders.wholesaleStore', 'orders.items.product', 'trader'])
+        ->get()
+        ->map(function ($shipment) {
+            return [
+                'id' => $shipment->id,
+                'date' => $shipment->created_at->format('Y-m-d H:i'),
+                'total_amount' => $shipment->total_amount,
+                'trader' => [
+                    'name' => $shipment->trader->store_name,
+                    'address' => $shipment->trader->address,
+                    'phone' => $shipment->trader->phone,
+                    'location' => [
+                        'latitude' => $shipment->trader->location_latitude,
+                        'longitude' => $shipment->trader->location_longitude,
+                    ],
+                ],
+                'orders' => $shipment->orders->map(function ($order) {
+                    return [
+                        'id' => $order->id,
+                        'store_name' => $order->wholesaleStore->name,
+                        'items' => $order->items->map(function ($item) {
+                            return [
+                                'product_name' => $item->product->name,
+                                'quantity' => $item->quantity,
+                            ];
+                        }),
+                    ];
+                }),
+            ];
+        });
+});
+
+// Get driver's current shipments
+Route::get('/driver/{id}/shipments', function (Request $request) {
+    return Shipment::where('driver_id', $request->id)
+        ->with(['orders.wholesaleStore', 'orders.items.product', 'trader'])
+        ->orderBy('created_at', 'desc')
+        ->get()
+        ->map(function ($shipment) {
+            return [
+                'id' => $shipment->id,
+                'date' => $shipment->created_at->format('Y-m-d H:i'),
+                'state' => $shipment->state,
+                'total_amount' => $shipment->total_amount,
+                'trader' => [
+                    'name' => $shipment->trader->store_name,
+                    'address' => $shipment->trader->address,
+                    'phone' => $shipment->trader->phone,
+                    'location' => [
+                        'latitude' => $shipment->trader->location_latitude,
+                        'longitude' => $shipment->trader->location_longitude,
+                    ],
+                ],
+                'orders' => $shipment->orders->map(function ($order) {
+                    return [
+                        'id' => $order->id,
+                        'store_name' => $order->wholesaleStore->name,
+                        'items' => $order->items->map(function ($item) {
+                            return [
+                                'product_name' => $item->product->name,
+                                'quantity' => $item->quantity,
+                            ];
+                        }),
+                    ];
+                }),
+            ];
+        });
+});
+
+// Accept a shipment
+Route::post('/shipments/{id}/accept', function (Request $request, $id) {
+    $shipment = Shipment::findOrFail($id);
+
+    if ($shipment->driver_id) {
+        return response()->json(['message' => 'This shipment is already assigned to another driver'], 400);
+    }
+
+    $shipment->update([
+        'driver_id' => $request->user()->id,
+        'state' => 'InProgress'
+    ]);
+
+    return response()->json(['message' => 'Shipment accepted successfully']);
+});
+
+// Complete a shipment
+Route::post('/shipments/{id}/complete', function (Request $request, $id) {
+    $shipment = Shipment::findOrFail($id);
+
+    if ($shipment->driver_id !== $request->user()->id) {
+        return response()->json(['message' => 'Unauthorized'], 403);
+    }
+
+    $shipment->update(['state' => 'Completed']);
+
+    return response()->json(['message' => 'Shipment completed successfully']);
 });

@@ -7,7 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Filament\Notifications\Notification as FilamentNotification;
 
-class OrderApprovedNotification extends Notification
+class OrderRejectedNotification extends Notification
 {
     use Queueable;
 
@@ -23,11 +23,10 @@ class OrderApprovedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return FilamentNotification::make()
-            ->title('تم قبول الطلب')
+            ->title('تم رفض الطلب')
             ->success()
             ->icon('heroicon-o-check-circle')
-            ->body("تم قبول طلبك من قبل {$this->order->wholesaleStore->name}")
+            ->body("تم رفض طلبك من قبل {$this->order->wholesaleStore->name}")
             ->getDatabaseMessage();
-
     }
 }

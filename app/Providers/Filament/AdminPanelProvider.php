@@ -67,6 +67,8 @@ class AdminPanelProvider extends PanelProvider
                 'purple'    => Color::Purple,
                 'teal'      => Color::Teal,
             ])
-            ->font('Rubik');
+            ->font('Rubik')
+            ->viteTheme('resources/css/filament/admin/theme.css')
+            ->databaseNotifications();
     }
 }

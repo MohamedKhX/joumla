@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('date');
             $table->string('number')->unique();
             $table->enum('state', ShipmentStateEnum::values())
-                ->default(ShipmentStateEnum::WaitingForShipping->value);
+                ->default(ShipmentStateEnum::Pending->value);
 
             $table->decimal('total_amount')->nullable();
 

@@ -37,7 +37,6 @@ class SubscriptionResource extends Resource
 
                 Tables\Columns\TextColumn::make('amount')
                     ->label('المبلغ')
-                    ->money('LYD')
                     ->sortable(),
 
                 Tables\Columns\BadgeColumn::make('status')

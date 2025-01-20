@@ -156,7 +156,6 @@ class OrderResource extends Resource
                 Tables\Columns\TextColumn::make('total_amount')
                     ->label('المبلغ الإجمالي')
                     ->translateLabel()
-                    ->money('LYD')
                     ->sortable(),
             ])
             ->filters([

@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\WholesaleStore;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class WholesaleStoreSeeder extends Seeder
 {
@@ -16,22 +17,44 @@ class WholesaleStoreSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = User::factory(10)->create([
+        $user = User::factory()->create([
+            'name' => 'Wholesale Store',
+            'email' => 'whole@whole.com',
+            'password' => Hash::make('password'),
             'type' => UserTypeEnum::Wholesaler
         ]);
 
-        foreach ($users as $user) {
-            WholesaleStore::factory()->create([
-                'user_id' => $user->id,
-            ]);
-        }
+        $wholeStore = WholesaleStore::factory()->create([
+            'name' => 'شركة الجملة',
+            'city' => 'طرابلس',
+            'address' => 'الكريمية',
+            'phone' => '0910000000',
 
-        $wholeStores = WholesaleStore::all();
-        foreach ($wholeStores as $wholeStore) {
-            Product::factory()->create([
-                'wholesale_store_id' => $wholeStore->id,
-            ]);
-        }
+            'user_id' => $user->id,
+        ]);
+
+        $wholeStore->subscriptions()->create([
+            'start_date' => now(),
+            'end_date' => now()->addYear(),
+            'amount' => 1000,
+        ]);
+
+        $wholeStore->addMediaFromUrl('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2HktmTXsnMq4zjvRmYkix1s2TnahupL9i7A&s')->toMediaCollection('logo');
+
+        $product1 = Product::factory()->create([
+            'name' => 'منتج 1',
+            'description' => 'هذا المنتج رائع ومهم جدا',
+            'price' => 250,
+            'wholesale_store_id' => $wholeStore->id
+        ]);
+
+        $product2 = Product::factory()->create([
+            'name' => 'منتج 2',
+            'description' => 'هذا المنتج رائع ومهم جدا',
+            'price' => 250,
+            'expire_date' => now()->addYear(),
+            'wholesale_store_id' => $wholeStore->id
+        ]);
 
         $products = Product::all();
         foreach ($products as $product) {

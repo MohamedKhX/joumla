@@ -23,7 +23,7 @@ class InvoiceSeeder extends Seeder
         ]);
 
         foreach ($orders as $order) {
-            $product = Product::find(rand(1, 10));
+            $product = Product::find(rand(1, 2));
 
             OrderItem::factory()->create([
                 'order_id'   => $order->id,

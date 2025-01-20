@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Enums\UserTypeEnum;
+use App\Notifications\NewDriverNotification;
+use App\Notifications\NewTraderNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -44,6 +46,23 @@ class User extends Authenticatable implements HasMedia
             'password' => 'hashed',
             'type' => UserTypeEnum::class
         ];
+    }
+
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            if($user->type != UserTypeEnum::Driver) {
+                return;
+            }
+
+            $admins = User::where('type', UserTypeEnum::Admin->value)->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new NewDriverNotification($user));
+            }
+        });
     }
 
     public function trader(): HasOne

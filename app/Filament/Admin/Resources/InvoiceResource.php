@@ -17,6 +17,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Torgodly\Html2Media\Tables\Actions\Html2MediaAction;
 
 class InvoiceResource extends Resource
 {
@@ -58,17 +59,28 @@ class InvoiceResource extends Resource
                     ->searchable(),
             ])
             ->actions([
-                InvoiceAction::make('print')
-                    ->label('Print')
+                InvoiceAction::make('view')
+                    ->label('View')
                     ->translateLabel()
                     ->color(Color::Teal)
-                    ->icon('heroicon-o-eye'),
-
-                Tables\Actions\Action::make('download')
-                    ->label('Download')
-                    ->translateLabel()
-                    ->color(Color::Green)
-                    ->icon('heroicon-o-arrow-down-tray'),
+                    ->icon('heroicon-o-eye')
+                    ->invoiceItems(fn($record) => $record->items)
+                    ->index()
+                    ->headersAndColumns([
+                        'product.name' => 'المتنج',
+                        'unit_price' => 'السعر',
+                        'quantity' => 'الكمية',
+                    ])
+                    ->date(fn($record) => $record->issued_on)
+                    ->companyName(fn($record) => $record->wholesaleStore->name)
+                    ->companyInfo(function ($record) {
+                        return [
+                            'العنوان' => $record->wholesaleStore->address,
+                            'الهاتف' => $record->wholesaleStore->phone,
+                        ];
+                    })
+                    ->logo(fn($record) => $record->wholesaleStore->getFirstMediaUrl('logo'))
+                    ->download(),
             ]);
     }
 

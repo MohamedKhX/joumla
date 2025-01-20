@@ -129,8 +129,6 @@ class DriverResource extends Resource
                     ->action(function ($record) {
                         $record->is_active = true;
                         $record->save();
-                        Mail::to($record->user->email)
-                            ->send(new StoreActive());
                     })
                     ->requiresConfirmation()
                     ->icon('tabler-activity')
@@ -143,7 +141,6 @@ class DriverResource extends Resource
                     ->action(function ($record) {
                         $record->is_active = false;
                         $record->save();
-
                     })
                     ->color(Color::Orange)
                     ->hidden(fn($record) => ! $record->is_active),

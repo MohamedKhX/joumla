@@ -5,6 +5,7 @@ namespace App\Filament\WholesaleStore\Resources;
 use App\Filament\WholesaleStore\Resources\InvoiceResource\Pages;
 use App\Filament\WholesaleStore\Resources\InvoiceResource\RelationManagers;
 use App\Models\Invoice;
+use App\Tables\Actions\InvoiceAction;
 use App\Traits\HasTranslatedLabels;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -15,6 +16,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class InvoiceResource extends Resource
 {
@@ -33,7 +35,8 @@ class InvoiceResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('number')
                     ->label('Invoice Number')
-                    ->translateLabel(),
+                    ->translateLabel()
+                    ->searchable(),
 
                 Tables\Columns\TextColumn::make('total_amount')
                     ->label('Total Amount')
@@ -46,24 +49,32 @@ class InvoiceResource extends Resource
 
                 Tables\Columns\TextColumn::make('trader.store_name')
                     ->label('The buyer')
-                    ->translateLabel(),
-
-                Tables\Columns\TextColumn::make('wholesaleStore.name')
-                    ->label('The seller')
-                    ->translateLabel(),
+                    ->translateLabel()
+                    ->searchable(),
             ])
             ->actions([
-                Tables\Actions\Action::make('print')
-                    ->label('Print')
+                InvoiceAction::make('view')
+                    ->label('View')
                     ->translateLabel()
                     ->color(Color::Teal)
-                    ->icon('heroicon-o-eye'),
-
-                Tables\Actions\Action::make('download')
-                    ->label('Download')
-                    ->translateLabel()
-                    ->color(Color::Green)
-                    ->icon('heroicon-o-arrow-down-tray'),
+                    ->icon('heroicon-o-eye')
+                    ->invoiceItems(fn($record) => $record->items)
+                    ->index()
+                    ->headersAndColumns([
+                        'product.name' => 'المتنج',
+                        'unit_price' => 'السعر',
+                        'quantity' => 'الكمية',
+                    ])
+                    ->date(fn($record) => $record->issued_on)
+                    ->companyName(fn($record) => $record->wholesaleStore->name)
+                    ->companyInfo(function ($record) {
+                        return [
+                            'العنوان' => $record->wholesaleStore->address,
+                            'الهاتف' => $record->wholesaleStore->phone,
+                        ];
+                    })
+                    ->logo(fn($record) => $record->wholesaleStore->getFirstMediaUrl('logo'))
+                    ->download(),
             ]);
     }
 
@@ -79,7 +90,9 @@ class InvoiceResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->latest();
+        return parent::getEloquentQuery()
+            ->where('wholesale_store_id', Auth::user()->wholesaleStore->id)
+            ->latest();
     }
 
     public static function getPages(): array
