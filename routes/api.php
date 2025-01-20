@@ -4,6 +4,7 @@ use App\Enums\UserTypeEnum;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Shipment;
+use App\Models\Trader;
 use App\Models\User;
 use App\Models\WholesaleStore;
 use Illuminate\Http\Request;
@@ -130,8 +131,8 @@ Route::post('/trader/orders', function (Request $request) {
     }
 });
 
-Route::get('/trader/orders', function (Request $request) {
-    $trader = $request->user()->trader;
+Route::get('/trader/{id}/orders', function (Request $request) {
+    $trader = Trader::where('user_id', $request->id)->first();
 
     $orders = Order::with(['wholesaleStore', 'items.product'])
         ->where('trader_id', $trader->id)
@@ -147,7 +148,7 @@ Route::get('/trader/orders', function (Request $request) {
                 ],
                 'total_amount' => $order->total_amount,
                 'state' => $order->state,
-                'shipmentState' => $order->shipmentState,
+                'shipmentState' => $order->shipment->state ?? 'قيد الشحن',
                 'items' => $order->items->map(function ($item) {
                     return [
                         'id' => $item->id,

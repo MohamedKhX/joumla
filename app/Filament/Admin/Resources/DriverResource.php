@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Enums\UserTypeEnum;
 use App\Filament\Admin\Resources\DriverResource\Pages;
 use App\Filament\Admin\Resources\DriverResource\RelationManagers;
+use App\Mail\StoreActive;
 use App\Models\Driver;
 use App\Models\User;
 use App\Traits\HasTranslatedLabels;
@@ -12,11 +13,13 @@ use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Mail;
 
 class DriverResource extends Resource
 {
@@ -102,11 +105,48 @@ class DriverResource extends Resource
                     ->translateLabel()
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('is_active')
+                    ->label('Is Active')
+                    ->translateLabel()
+                    ->searchable()
+                    ->badge()
+                    ->color(function ($state) {
+                        if($state) {
+                            return Color::Green;
+                        }
+
+                        return Color::Red;
+                    })
+                    ->formatStateUsing(fn($state) => $state ? 'مفعل' : 'ليس مفعل')
+                    ->icon('tabler-activity-heartbeat'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('activate')
+                    ->label('Activate')
+                    ->translateLabel()
+                    ->action(function ($record) {
+                        $record->is_active = true;
+                        $record->save();
+                        Mail::to($record->user->email)
+                            ->send(new StoreActive());
+                    })
+                    ->requiresConfirmation()
+                    ->icon('tabler-activity')
+                    ->hidden(fn($record) => $record->is_active),
 
+                Tables\Actions\Action::make('de_activate')
+                    ->label('De Activate')
+                    ->translateLabel()
+                    ->icon('tabler-activity')
+                    ->action(function ($record) {
+                        $record->is_active = false;
+                        $record->save();
+
+                    })
+                    ->color(Color::Orange)
+                    ->hidden(fn($record) => ! $record->is_active),
                 Tables\Actions\Action::make('change_password')
                     ->label('Change Password')
                     ->translateLabel()

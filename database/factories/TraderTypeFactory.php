@@ -17,7 +17,18 @@ class TraderTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->randomElement([
+                'بقالة',
+                'سوبر ماركت',
+                'متجر ملابس',
+                'متجر إلكترونيات',
+                'متجر مواد بناء',
+                'صيدلية',
+                'متجر عطور',
+                'متجر أثاث',
+                'متجر قطع غيار',
+                'مكتبة',
+            ]),
         ];
     }
 }

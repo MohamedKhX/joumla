@@ -33,9 +33,7 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             $table->foreignId('shipment_id')
-                ->nullable()
-                ->constrained()
-                ->cascadeOnDelete();
+                ->nullable();
 
             $table->timestamps();
         });

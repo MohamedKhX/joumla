@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Enums\WholesaleStoreEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,13 +16,25 @@ class WholesaleStoreFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            'name' => $this->faker->name(),
-            'phone' => $this->faker->phoneNumber(),
+        $libyanCities = [
+            'طرابلس', 'بنغازي', 'مصراتة', 'الزاوية', 'زليتن', 'صبراتة', 'غريان',
+            'البيضاء', 'طبرق', 'سرت', 'الخمس', 'درنة', 'سبها'
+        ];
 
-            'city' => $this->faker->city(),
-            'address' => $this->faker->address(),
-            'wholesale_store_type_id' => $this->faker->randomElement([1,2,3,4,5,6,7,8,9,10])
+        $commercialAreas = [
+            'السوق القديم', 'شارع عمر المختار', 'شارع الجمهورية', 'المدينة القديمة',
+            'السوق الجديد', 'المنطقة الصناعية', 'شارع الفاتح', 'شارع النصر'
+        ];
+
+        return [
+            'name' => 'شركة ' . fake()->randomElement([
+                'الأمان', 'النور', 'الصفاء', 'البركة', 'الوفاء', 'السلام', 'الخير',
+                'الرحمة', 'الهدى', 'الفجر', 'النهضة', 'التقوى', 'الإيمان', 'المستقبل'
+            ]) . ' للتجارة',
+            'city' => fake()->randomElement($libyanCities),
+            'address' => fake()->randomElement($commercialAreas) . '، ' . fake()->buildingNumber(),
+            'phone' => fake()->e164PhoneNumber(),
+            'wholesale_store_type_id' => fake()->numberBetween(1, 10)
         ];
     }
 }

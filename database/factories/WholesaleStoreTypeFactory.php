@@ -17,7 +17,18 @@ class WholesaleStoreTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->randomElement([
+                'مواد غذائية',
+                'مواد بناء',
+                'أدوات منزلية',
+                'ملابس',
+                'إلكترونيات',
+                'مواد تنظيف',
+                'عطور وتجميل',
+                'أثاث منزلي',
+                'قطع غيار سيارات',
+                'أدوات مكتبية',
+            ]),
         ];
     }
 }
