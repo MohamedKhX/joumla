@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ShipmentStateEnum;
 use App\Enums\UserTypeEnum;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -293,7 +294,7 @@ Route::post('/new/driver', function (Request $request) {
 
 // Get all available shipments for drivers
 Route::get('/shipments/available', function () {
-    return Shipment::where('state', 'Approved')
+    return Shipment::where('state', ShipmentStateEnum::WaitingForShipping)
         ->where('driver_id', null)
         ->with(['orders.wholesaleStore', 'orders.items.product', 'trader'])
         ->get()
@@ -365,30 +366,68 @@ Route::get('/driver/{id}/shipments', function (Request $request) {
 });
 
 // Accept a shipment
-Route::post('/shipments/{id}/accept', function (Request $request, $id) {
-    $shipment = Shipment::findOrFail($id);
+Route::post('/shipments/{id}/{driverId}/accept', function (Request $request) {
+    $shipment = Shipment::findOrFail($request->id);
 
     if ($shipment->driver_id) {
         return response()->json(['message' => 'This shipment is already assigned to another driver'], 400);
     }
 
     $shipment->update([
-        'driver_id' => $request->user()->id,
-        'state' => 'InProgress'
+        'driver_id' => $request->dirverId,
+        'state' => ShipmentStateEnum::WaitingForReceiving,
     ]);
 
     return response()->json(['message' => 'Shipment accepted successfully']);
 });
 
-// Complete a shipment
-Route::post('/shipments/{id}/complete', function (Request $request, $id) {
+// Receive a shipment
+Route::post('/shipments/{id}/Received', function (Request $request, $id) {
     $shipment = Shipment::findOrFail($id);
 
     if ($shipment->driver_id !== $request->user()->id) {
         return response()->json(['message' => 'Unauthorized'], 403);
     }
 
-    $shipment->update(['state' => 'Completed']);
+    $shipment->update(['state' => ShipmentStateEnum::Received]);
 
-    return response()->json(['message' => 'Shipment completed successfully']);
+    return response()->json(['message' => 'Shipment Received successfully']);
+});
+
+
+// Receive a shipment
+Route::post('/shipments/{id}/Shipping', function (Request $request, $id) {
+    $shipment = Shipment::findOrFail($id);
+
+    if ($shipment->driver_id !== $request->user()->id) {
+        return response()->json(['message' => 'Unauthorized'], 403);
+    }
+
+    $shipment->update(['state' => ShipmentStateEnum::Shipping]);
+
+    return response()->json(['message' => 'Shipment Shipping successfully']);
+});
+
+Route::post('/shipments/{id}/Shipped', function (Request $request, $id) {
+    $shipment = Shipment::findOrFail($id);
+
+    if ($shipment->driver_id !== $request->user()->id) {
+        return response()->json(['message' => 'Unauthorized'], 403);
+    }
+
+    $shipment->update(['state' => ShipmentStateEnum::Shipped]);
+
+    return response()->json(['message' => 'Shipment Shipped successfully']);
+});
+
+// Cancel a shipment
+Route::post('/shipments/{id}/cancel', function (Request $request, $id) {
+    $shipment = Shipment::findOrFail($id);
+
+    $shipment->update([
+        'state' => ShipmentStateEnum::WaitingForShipping,
+        'driver_id' => null,
+    ]);
+
+    return response()->json(['message' => 'Shipment canceled successfully']);
 });

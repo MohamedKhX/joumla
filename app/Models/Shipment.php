@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use App\Contracts\HasUniqueNumberInterface;
+use App\Enums\ShipmentStateEnum;
 use App\Traits\HasUniqueNumber;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -16,9 +18,23 @@ class Shipment extends Model implements HasUniqueNumberInterface
 
     protected $guarded = [];
 
+    protected $casts = [
+        'state' => ShipmentStateEnum::class,
+    ];
+
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function driver(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'driver_id');
+    }
+
+    public function trader(): BelongsTo
+    {
+        return $this->belongsTo(Trader::class);
     }
 
     public function getNumberPrefix(): string
