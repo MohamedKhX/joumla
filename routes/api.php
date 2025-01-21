@@ -168,7 +168,12 @@ Route::get('/trader/{id}/orders', function (Request $request) {
 Route::get('/user/{id}/notifications', function (Request $request) {
     $user = User::find($request->id);
 
+
     return $user->notifications->map(function ($item) {
+        if(isset($item->data['type'])) {
+            return $item;
+        }
+
         return [
             'id' => $item->id,
             'title' => $item->data['title'],
@@ -374,7 +379,7 @@ Route::post('/shipments/{id}/{driverId}/accept', function (Request $request) {
     }
 
     $shipment->update([
-        'driver_id' => $request->dirverId,
+        'driver_id' => $request->driverId,
         'state' => ShipmentStateEnum::WaitingForReceiving,
     ]);
 
@@ -382,12 +387,8 @@ Route::post('/shipments/{id}/{driverId}/accept', function (Request $request) {
 });
 
 // Receive a shipment
-Route::post('/shipments/{id}/Received', function (Request $request, $id) {
-    $shipment = Shipment::findOrFail($id);
-
-    if ($shipment->driver_id !== $request->user()->id) {
-        return response()->json(['message' => 'Unauthorized'], 403);
-    }
+Route::post('/shipments/{id}/Received', function (Request $request) {
+    $shipment = Shipment::findOrFail($request->id);
 
     $shipment->update(['state' => ShipmentStateEnum::Received]);
 
@@ -397,11 +398,7 @@ Route::post('/shipments/{id}/Received', function (Request $request, $id) {
 
 // Receive a shipment
 Route::post('/shipments/{id}/Shipping', function (Request $request, $id) {
-    $shipment = Shipment::findOrFail($id);
-
-    if ($shipment->driver_id !== $request->user()->id) {
-        return response()->json(['message' => 'Unauthorized'], 403);
-    }
+    $shipment = Shipment::findOrFail($request->id);
 
     $shipment->update(['state' => ShipmentStateEnum::Shipping]);
 
@@ -409,11 +406,7 @@ Route::post('/shipments/{id}/Shipping', function (Request $request, $id) {
 });
 
 Route::post('/shipments/{id}/Shipped', function (Request $request, $id) {
-    $shipment = Shipment::findOrFail($id);
-
-    if ($shipment->driver_id !== $request->user()->id) {
-        return response()->json(['message' => 'Unauthorized'], 403);
-    }
+    $shipment = Shipment::findOrFail($request->id);
 
     $shipment->update(['state' => ShipmentStateEnum::Shipped]);
 
@@ -430,4 +423,46 @@ Route::post('/shipments/{id}/cancel', function (Request $request, $id) {
     ]);
 
     return response()->json(['message' => 'Shipment canceled successfully']);
+});
+
+// Proceed with approved orders
+Route::post('/shipments/{id}/proceed-with-approved', function (Request $request) {
+    $shipment = Shipment::findOrFail($request->id);
+
+    // Delete the notification(s) related to this shipment in the custom table
+  /*  DB::table('notifications')  // Adjust the table name if it's different
+    ->whereJsonContains('data->shipment_id', $request->id) // Querying the JSON field for shipment_id
+    ->delete();*/
+    // Delete rejected orders
+    $shipment->orders()->where('state', \App\Enums\OrderStateEnum::Rejected)->delete();
+
+    // Update shipment total amount
+    $shipment->update([
+        'total_amount' => $shipment->orders()->sum('total_amount'),
+        'state' => ShipmentStateEnum::WaitingForShipping
+    ]);
+
+
+
+    return response()->json([
+        'message' => 'تم تحديث الشحنة بنجاح'
+    ]);
+});
+
+// Cancel all orders
+Route::post('/shipments/{id}/cancel-all', function (Request $request) {
+    $shipment = Shipment::findOrFail($request->id);
+
+    // Delete the notification(s) related to this shipment in the custom table
+    DB::table('notifications')  // Adjust the table name if it's different
+    ->whereJsonContains('data->shipment_id', $request->id) // Querying the JSON field for shipment_id
+    ->delete();
+    // Delete all orders and the shipment
+    $shipment->orders()->delete();
+    $shipment->delete();
+
+
+    return response()->json([
+        'message' => 'تم إلغاء جميع الطلبات بنجاح'
+    ]);
 });

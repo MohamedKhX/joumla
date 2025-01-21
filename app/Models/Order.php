@@ -107,7 +107,7 @@ class Order extends Model implements HasUniqueNumberInterface
         // If some orders are approved and some are rejected, notify trader
         if ($orders->contains(fn($order) => $order->state === OrderStateEnum::Approved) &&
             $orders->contains(fn($order) => $order->state === OrderStateEnum::Rejected)) {
-            $this->trader->user->notify(new AskTraderForShipmentDecisionNotification());
+            $this->trader->user->notify(new AskTraderForShipmentDecisionNotification($this->shipment, $this->shipment->orders->where('state', OrderStateEnum::Rejected)->toArray()));
         }
     }
 

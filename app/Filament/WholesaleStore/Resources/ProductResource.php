@@ -65,15 +65,8 @@ class ProductResource extends Resource
                             ->translateLabel()
                             ->nullable()
                             ->date(),
-
-                        SpatieMediaLibraryFileUpload::make('images')
-                            ->label('Images')
-                            ->translateLabel()
-                            ->collection('images')
-                            ->multiple(),
-
                         Forms\Components\Hidden::make('wholesale_store_id')
-                            ->default(1)
+                            ->default(auth()->user()->wholesaleStore->id)
                     ])
                     ->columns(1)
             ]);
