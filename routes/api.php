@@ -381,7 +381,7 @@ Route::post('/shipments/{id}/{driverId}/accept', function (Request $request) {
         return response()->json(['message' => 'This shipment is already assigned to another driver'], 400);
     }
 
-    $this->shipment->trader->user->notify(new DriverAcceptedOrderNotification($shipment));
+    //$this->shipment->trader->user->notify(new DriverAcceptedOrderNotification($shipment));
 
     $shipment->update([
         'driver_id' => $request->driverId,
@@ -395,7 +395,7 @@ Route::post('/shipments/{id}/{driverId}/accept', function (Request $request) {
 Route::post('/shipments/{id}/Received', function (Request $request) {
     $shipment = Shipment::findOrFail($request->id);
 
-    $this->shipment->trader->user->notify(new DriverReceivedOrderNotification($shipment));
+    //$this->shipment->trader->user->notify(new DriverReceivedOrderNotification($shipment));
 
 
     $shipment->update(['state' => ShipmentStateEnum::Received]);
@@ -408,7 +408,7 @@ Route::post('/shipments/{id}/Received', function (Request $request) {
 Route::post('/shipments/{id}/Shipping', function (Request $request, $id) {
     $shipment = Shipment::findOrFail($request->id);
 
-    $this->shipment->trader->user->notify(new DriverShipedOrderNotification($shipment));
+    //$this->shipment->trader->user->notify(new DriverShipedOrderNotification($shipment));
 
     $shipment->update(['state' => ShipmentStateEnum::Shipping]);
 
@@ -440,9 +440,9 @@ Route::post('/shipments/{id}/proceed-with-approved', function (Request $request)
     $shipment = Shipment::findOrFail($request->id);
 
     // Delete the notification(s) related to this shipment in the custom table
-    DB::table('notifications')  // Adjust the table name if it's different
+   /* DB::table('notifications')  // Adjust the table name if it's different
     ->whereJsonContains('data->shipment_id', $request->id) // Querying the JSON field for shipment_id
-    ->delete();
+    ->delete();*/
     // Delete rejected orders
     $shipment->orders()->where('state', \App\Enums\OrderStateEnum::Rejected)->delete();
 
@@ -464,9 +464,9 @@ Route::post('/shipments/{id}/cancel-all', function (Request $request) {
     $shipment = Shipment::findOrFail($request->id);
 
     // Delete the notification(s) related to this shipment in the custom table
-    DB::table('notifications')  // Adjust the table name if it's different
+  /*  DB::table('notifications')  // Adjust the table name if it's different
     ->whereJsonContains('data->shipment_id', $request->id) // Querying the JSON field for shipment_id
-    ->delete();
+    ->delete();*/
     // Delete all orders and the shipment
     $shipment->orders()->delete();
     $shipment->delete();
