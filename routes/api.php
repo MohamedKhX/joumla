@@ -440,9 +440,9 @@ Route::post('/shipments/{id}/proceed-with-approved', function (Request $request)
     $shipment = Shipment::findOrFail($request->id);
 
     // Delete the notification(s) related to this shipment in the custom table
-  /*  DB::table('notifications')  // Adjust the table name if it's different
+    DB::table('notifications')  // Adjust the table name if it's different
     ->whereJsonContains('data->shipment_id', $request->id) // Querying the JSON field for shipment_id
-    ->delete();*/
+    ->delete();
     // Delete rejected orders
     $shipment->orders()->where('state', \App\Enums\OrderStateEnum::Rejected)->delete();
 
