@@ -55,7 +55,7 @@ class Order extends Model implements HasUniqueNumberInterface
     {
         parent::boot();
 
-        static::creating(function ($order) {
+        static::created(function ($order) {
             Invoice::factory()->create([
                 'issued_on' => now(),
                 'total_amount' => $order->total_amount,
