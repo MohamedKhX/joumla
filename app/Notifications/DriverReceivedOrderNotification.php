@@ -9,7 +9,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\DatabaseMessage;
 
-class DriverAcceptedOrderNotification extends Notification
+class DriverReceivedOrderNotification extends Notification
 {
     use Queueable;
 
@@ -25,10 +25,10 @@ class DriverAcceptedOrderNotification extends Notification
     public function toDatabase($notifiable)
     {
         return FilamentNotification::make()
-            ->title('قبول السائق للطلب')
+            ->title('السائق قام باستلام الطلب')
             ->success()
             ->icon('heroicon-o-check-circle')
-            ->body("تم قبول طلبك من قبل السائق {$this->shipment->driver->name}")
+            ->body("تم استلام طلبك من قبل السائق {$this->shipment->driver->name}")
             ->getDatabaseMessage();
     }
 }

@@ -8,6 +8,9 @@ use App\Models\Shipment;
 use App\Models\Trader;
 use App\Models\User;
 use App\Models\WholesaleStore;
+use App\Notifications\DriverAcceptedOrderNotification;
+use App\Notifications\DriverReceivedOrderNotification;
+use App\Notifications\DriverShipedOrderNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -378,6 +381,8 @@ Route::post('/shipments/{id}/{driverId}/accept', function (Request $request) {
         return response()->json(['message' => 'This shipment is already assigned to another driver'], 400);
     }
 
+    $this->shipment->trader->user->notify(new DriverAcceptedOrderNotification($shipment));
+
     $shipment->update([
         'driver_id' => $request->driverId,
         'state' => ShipmentStateEnum::WaitingForReceiving,
@@ -390,6 +395,9 @@ Route::post('/shipments/{id}/{driverId}/accept', function (Request $request) {
 Route::post('/shipments/{id}/Received', function (Request $request) {
     $shipment = Shipment::findOrFail($request->id);
 
+    $this->shipment->trader->user->notify(new DriverReceivedOrderNotification($shipment));
+
+
     $shipment->update(['state' => ShipmentStateEnum::Received]);
 
     return response()->json(['message' => 'Shipment Received successfully']);
@@ -399,6 +407,8 @@ Route::post('/shipments/{id}/Received', function (Request $request) {
 // Receive a shipment
 Route::post('/shipments/{id}/Shipping', function (Request $request, $id) {
     $shipment = Shipment::findOrFail($request->id);
+
+    $this->shipment->trader->user->notify(new DriverShipedOrderNotification($shipment));
 
     $shipment->update(['state' => ShipmentStateEnum::Shipping]);
 
