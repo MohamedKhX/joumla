@@ -41,6 +41,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call(WholesaleStoreSeeder::class);
         $this->call(TraderSeeder::class);
-        $this->call(InvoiceSeeder::class);
+        //$this->call(InvoiceSeeder::class);
     }
 }

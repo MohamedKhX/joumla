@@ -56,8 +56,13 @@ class Order extends Model implements HasUniqueNumberInterface
         parent::boot();
 
         static::creating(function ($order) {
-            //$order->wholesale_store_id = auth()->user()->wholesaleStore->id;
-            $order->number = 'ORD-' . str_pad((Order::max('id') ?? 0) + 1, 6, '0', STR_PAD_LEFT);
+            Invoice::factory()->create([
+                'issued_on' => now(),
+                'total_amount' => $order->totalAmount,
+                'order_id' => $order->id,
+                'trader_id' => $order->trader_id,
+                'wholesale_store_id' => $order->wholesale_store_id,
+            ]);
         });
 
         // When order is created
@@ -129,13 +134,6 @@ class Order extends Model implements HasUniqueNumberInterface
     {
         return $this->belongsTo(Shipment::class);
     }
-
-    /*public function shipmentState(): Attribute
-    {
-        return Attribute::get(function () {
-            return $this->shipment->state;
-        });
-    }*/
 
     public function getShipmentStateAttribute()
     {
