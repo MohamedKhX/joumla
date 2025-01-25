@@ -30,6 +30,7 @@ class WholesaleStorePanelProvider extends PanelProvider
             ->id('wholesaleStore')
             ->path('wholesaleStore')
             ->login()
+            ->passwordReset()
             ->colors([
                 'primary' => Color::Amber,
             ])
