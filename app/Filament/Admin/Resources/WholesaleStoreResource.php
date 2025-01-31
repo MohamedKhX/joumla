@@ -26,10 +26,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 class WholesaleStoreResource extends Resource
 {
-    use HasTranslatedLabels;
-
-    protected static ?string $model = WholesaleStore::class;
-
     protected static ?string $navigationIcon = 'tabler-building-warehouse';
 
     protected static ?int $navigationSort = 1;
@@ -185,6 +181,39 @@ class WholesaleStoreResource extends Resource
                     }),
             ]);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    use HasTranslatedLabels;
+
+    protected static ?string $model = WholesaleStore::class;
+
 
     public static function getEloquentQuery(): Builder
     {

@@ -22,10 +22,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductResource extends Resource
 {
-    use HasTranslatedLabels;
-
-    protected static ?string $model = Product::class;
-
     protected static ?string $navigationIcon = 'tabler-box';
 
     public static function form(Form $form): Form
@@ -106,6 +102,37 @@ class ProductResource extends Resource
                 Tables\Actions\DeleteAction::make(),
             ]);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    use HasTranslatedLabels;
+
+    protected static ?string $model = Product::class;
 
     public static function getPages(): array
     {

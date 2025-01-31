@@ -21,9 +21,7 @@ use Torgodly\Html2Media\Tables\Actions\Html2MediaAction;
 
 class InvoiceResource extends Resource
 {
-    use HasTranslatedLabels;
 
-    protected static ?string $model = Invoice::class;
 
     protected static ?string $navigationIcon = 'tabler-file-invoice';
 
@@ -83,6 +81,44 @@ class InvoiceResource extends Resource
                     ->download(),
             ]);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    use HasTranslatedLabels;
+
+    protected static ?string $model = Invoice::class;
 
     public static function canCreate(): bool
     {

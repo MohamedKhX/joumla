@@ -20,14 +20,9 @@ use Illuminate\Support\Facades\Auth;
 
 class InvoiceResource extends Resource
 {
-    use HasTranslatedLabels;
-
-    protected static ?string $model = Invoice::class;
-
-    protected static ?string $navigationIcon = 'tabler-file-invoice';
-
     protected static ?int $navigationSort = 3;
 
+    protected static ?string $navigationIcon = 'tabler-file-invoice';
 
     public static function table(Table $table): Table
     {
@@ -77,6 +72,52 @@ class InvoiceResource extends Resource
                     ->download(),
             ]);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    use HasTranslatedLabels;
+
+    protected static ?string $model = Invoice::class;
+
+
 
     public static function canCreate(): bool
     {

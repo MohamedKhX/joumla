@@ -21,6 +21,30 @@ class SubscriptionExpired extends Page
         }
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public static function getSlug(): string
     {
         return static::$slug ?? 'subscription-expired';
@@ -37,4 +61,4 @@ class SubscriptionExpired extends Page
             'lastSubscription' => auth()->user()->wholesaleStore->subscriptions()->latest()->first(),
         ];
     }
-} 
+}

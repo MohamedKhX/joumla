@@ -23,11 +23,8 @@ use Illuminate\Support\Facades\Mail;
 
 class DriverResource extends Resource
 {
-    use HasTranslatedLabels;
-
     protected static ?int $navigationSort = 5;
 
-    protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'tabler-car';
 
@@ -161,6 +158,52 @@ class DriverResource extends Resource
 
             ]);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    use HasTranslatedLabels;
+    protected static ?string $model = User::class;
 
     public static function getPages(): array
     {

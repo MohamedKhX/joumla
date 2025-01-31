@@ -16,9 +16,6 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class WholesaleStoreTypeResource extends Resource
 {
-    use HasTranslatedLabels;
-    protected static ?string $model = WholesaleStoreType::class;
-
     protected static ?string $navigationIcon = 'heroicon-s-queue-list';
 
     protected static ?int $navigationSort = 8;
@@ -49,6 +46,36 @@ class WholesaleStoreTypeResource extends Resource
                 Tables\Actions\DeleteAction::make(),
             ]);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    use HasTranslatedLabels;
+    protected static ?string $model = WholesaleStoreType::class;
+
 
     public static function getRelations(): array
     {

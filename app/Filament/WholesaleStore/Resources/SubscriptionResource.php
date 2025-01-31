@@ -15,10 +15,7 @@ use Illuminate\Support\Facades\Auth;
 
 class SubscriptionResource extends Resource
 {
-    use HasTranslatedLabels;
-    protected static ?string $model = WholesaleStoreSubscription::class;
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
-    protected static ?string $navigationLabel = 'الاشتراكات';
     protected static ?int $navigationSort = 2;
 
     public static function table(Table $table): Table
@@ -67,6 +64,30 @@ class SubscriptionResource extends Resource
                     ]),
             ]);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    protected static ?string $navigationLabel = 'الاشتراكات';
+
+    use HasTranslatedLabels;
+    protected static ?string $model = WholesaleStoreSubscription::class;
 
     public static function getPages(): array
     {
