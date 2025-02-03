@@ -113,7 +113,7 @@ Route::post('/trader/orders', function (Request $request) {
         $shipment = Shipment::create([
             'date' => now(),
             'trader_id' => $request->trader_id,
-            'total_amount' => collect($orders)->sum('total_amount')
+            'total_amount' => collect($orders)->sum('totalAmount')
         ]);
 
         foreach ($orders as $order) {
@@ -449,7 +449,6 @@ Route::post('/shipments/{id}/proceed-with-approved', function (Request $request)
 
     // Update shipment total amount
     $shipment->update([
-        'total_amount' => $shipment->orders()->sum('totalAmount'),
         'state' => ShipmentStateEnum::WaitingForShipping
     ]);
 

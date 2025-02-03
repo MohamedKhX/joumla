@@ -30,6 +30,11 @@ class Invoice extends Model
         return Attribute::get(fn() => $this->order->items);
     }
 
+    public function total_amount(): Attribute
+    {
+        return Attribute::get(fn() => $this->order->totalAmount);
+    }
+
     public function wholesaleStore(): BelongsTo
     {
         return $this->belongsTo(WholesaleStore::class);
