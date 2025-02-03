@@ -182,6 +182,15 @@ class TraderResource extends Resource
                     ->icon('tabler-brand-storj')
                     ->badge(),
             ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('is_active')
+                    ->label('Is Active')
+                    ->translateLabel()
+                    ->options([
+                        '1' => 'مفعل',
+                        '0' => 'ليس مفعل',
+                    ]),
+            ])
             ->actions([
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\EditAction::make(),

@@ -117,6 +117,15 @@ class DriverResource extends Resource
                     ->formatStateUsing(fn($state) => $state ? 'مفعل' : 'ليس مفعل')
                     ->icon('tabler-activity-heartbeat'),
             ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('is_active')
+                    ->label('Is Active')
+                    ->translateLabel()
+                    ->options([
+                        '1' => 'مفعل',
+                        '0' => 'ليس مفعل',
+                    ]),
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
