@@ -130,6 +130,13 @@ class Order extends Model implements HasUniqueNumberInterface
         });
     }
 
+    public function total_amount(): Attribute
+    {
+        return new Attribute(function ($value) {
+            return $this->totalAmount;
+        });
+    }
+
     public function shipment(): BelongsTo
     {
         return $this->belongsTo(Shipment::class);
