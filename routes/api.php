@@ -268,6 +268,7 @@ Route::post('/new/driver', function (Request $request) {
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
             'type' => UserTypeEnum::Driver,
+            'is_active' => false
         ]);
 
         // Handle file uploads
