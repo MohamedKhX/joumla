@@ -449,7 +449,7 @@ Route::post('/shipments/{id}/proceed-with-approved', function (Request $request)
 
     // Update shipment total amount
     $shipment->update([
-        'total_amount' => $shipment->orders()->sum('total_amount'),
+        'total_amount' => $shipment->orders()->sum('totalAmount'),
         'state' => ShipmentStateEnum::WaitingForShipping
     ]);
 

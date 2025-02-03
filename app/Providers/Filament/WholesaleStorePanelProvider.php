@@ -73,6 +73,7 @@ class WholesaleStorePanelProvider extends PanelProvider
                 'teal'      => Color::Teal,
             ])
             ->font('Rubik')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->databaseNotifications();
     }
 }
