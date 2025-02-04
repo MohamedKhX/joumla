@@ -50,6 +50,13 @@ class Shipment extends Model implements HasUniqueNumberInterface
         });
     }
 
+    public function totalAmount(): Attribute
+    {
+        return Attribute::get(function() {
+            return $this->orders->sum('totalAmount');
+        });
+    }
+
     public function getNumberPrefix(): string
     {
         return 'shipment-';
