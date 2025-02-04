@@ -37,7 +37,7 @@ class InvoiceResource extends Resource
                     ->translateLabel()
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('total_amount')
+                Tables\Columns\TextColumn::make('totalAmount')
                     ->label('Total Amount')
                     ->translateLabel()
                     ->suffix(' د.ل'),

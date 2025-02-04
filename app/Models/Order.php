@@ -28,7 +28,9 @@ class Order extends Model implements HasUniqueNumberInterface
    protected $guarded = [];
 
    protected $appends = [
-       'shipmentState'
+       'shipmentState',
+       'total_amount',
+       'totalAmount'
    ];
 
     protected $casts = [
