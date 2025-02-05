@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('city', 100)->nullable();
             $table->string('address', 255)->nullable();
             $table->boolean('is_active')->default(false);
-
+            $table->softDeletes();
             $table->decimal('location_latitude', 10, 8)->nullable();
             $table->decimal('location_longitude', 10, 8)->nullable();
 

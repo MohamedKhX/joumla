@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class WholesaleStoreSubscription extends Model
 {
     /** @use HasFactory<\Database\Factories\WholesaleStoreSubscriptionFactory> */
-    use HasFactory;
+    use HasFactory,
+        SoftDeletes;
 
     protected $fillable = [
         'wholesale_store_id',

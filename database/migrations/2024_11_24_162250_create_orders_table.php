@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('number')->unique();
             $table->enum('state', OrderStateEnum::values())
                 ->default(OrderStateEnum::Pending->value);
-
+            $table->softDeletes();
             $table->boolean('is_deferred')->default(false);
 
             $table->decimal('total_amount')->nullable();

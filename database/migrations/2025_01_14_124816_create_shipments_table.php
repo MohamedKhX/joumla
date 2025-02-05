@@ -26,7 +26,7 @@ return new class extends Migration
                 ->nullable()
                 ->constrained('users')
                 ->cascadeOnDelete();
-
+            $table->softDeletes();
             $table->foreignId('trader_id')
                 ->constrained('traders')
                 ->cascadeOnDelete();

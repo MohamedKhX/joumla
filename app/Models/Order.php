@@ -19,11 +19,13 @@ use App\Notifications\OrderApprovedNotification;
 use App\Notifications\DriverAcceptedOrderNotification;
 use App\Notifications\OrderPickedUpNotification;
 use App\Notifications\OrderDeliveredNotification;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Order extends Model implements HasUniqueNumberInterface
 {
     use HasFactory,
-        HasUniqueNumber;
+        HasUniqueNumber,
+        SoftDeletes;
 
    protected $guarded = [];
 

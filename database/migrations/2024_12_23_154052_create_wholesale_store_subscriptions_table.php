@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('amount', 10, 2);
             $table->enum('status', ['active', 'expired'])->default('active');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

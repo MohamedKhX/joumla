@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('city', 100);
             $table->string('address', 100);
             $table->string('phone');
-
+            $table->softDeletes();
             $table->foreignId('user_id')->constrained();
             $table->foreignId('wholesale_store_type_id');
             $table->timestamps();

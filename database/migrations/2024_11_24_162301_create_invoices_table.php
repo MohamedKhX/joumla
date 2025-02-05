@@ -17,7 +17,7 @@ return new class extends Migration
             $table->decimal('total_amount');
             $table->boolean('paid')->default(false);
             $table->string('number')->unique();
-
+            $table->softDeletes();
             $table->foreignId('order_id')
                 ->constrained('orders')
                 ->cascadeOnDelete();

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('description');
             $table->decimal('price');
             $table->date('expire_date')->nullable();
-
+            $table->softDeletes();
             $table->foreignId('wholesale_store_id')->constrained('wholesale_stores');
             $table->timestamps();
         });

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('quantity');
             $table->decimal('unit_price')->unsigned();
-
+            $table->softDeletes();
             $table->foreignId('order_id')
                 ->constrained('orders')
                 ->onDelete('cascade');
