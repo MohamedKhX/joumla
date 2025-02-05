@@ -49,7 +49,7 @@ services:
             - DB_PASSWORD=mtQa3r14Z8xLcWdqs4tcoLNxwvQKtQAMs06uFHfF20HIX4ClLTrzB3N07qKGdwMf
 
 
-                - SESSION_DRIVER=database
+            - SESSION_DRIVER=database
             - SESSION_LIFETIME=120
             - SESSION_ENCRYPT=false
             - SESSION_PATH=/
