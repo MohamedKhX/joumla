@@ -28,5 +28,3 @@ RUN composer install --no-interaction --optimize-autoloader
 
 RUN npm install
 RUN npm run build
-# Run migrations and seeds
-RUN php artisan migrate --force && php artisan db:seed --force
