@@ -45,13 +45,19 @@ Route::post('login', function (Request $request) {
             'email' => 'البيانات غير صحيحة'
         ]);
     }
+
+    // Load trader relationship if user is a trader
+    if ($user->type === UserTypeEnum::Trader) {
+        $user->load('trader');
+    }
+
     $token = $user->createToken($request->device_name);
 
     return response()->json([
-        'token' => $token->plainTextToken
+        'token' => $token->plainTextToken,
+        'user' => $user
     ]);
 });
-
 Route::get('wholesale-stores', function () {
     $wholesaleStores = WholesaleStore::all()->map(function ($store) {
         return [
@@ -475,4 +481,85 @@ Route::post('/shipments/{id}/cancel-all', function (Request $request) {
     return response()->json([
         'message' => 'تم إلغاء جميع الطلبات بنجاح'
     ]);
+});
+Route::get('/traders/{id}', function (Request $request, $id) {
+    $trader = Trader::with('user')->findOrFail($id);
+
+    return response()->json([
+        'id' => $trader->id,
+        'store_name' => $trader->store_name,
+        'address' => $trader->address ?? '',
+        'city' => $trader->city ?? '',
+        'phone' => $trader->phone ?? '',
+        'location' => [
+            'latitude' => $trader->location_latitude ?? 32.8872,
+            'longitude' => $trader->location_longitude ?? 13.1913,
+        ],
+        'logo' => $trader->getFirstMediaUrl('logo'),
+        'user' => [
+            'name' => $trader->user->name,
+            'email' => $trader->user->email,
+            'phone' => $trader->user->phone ?? '',
+        ]
+    ]);
+});
+// Add this new route for handling logo updates
+Route::post('/traders/{id}/update-logo', function (Request $request, $id) {
+    $trader = Trader::findOrFail($id);
+
+    if ($request->hasFile('logo')) {
+        $trader->clearMediaCollection('logo');
+        $trader->addMedia($request->file('logo'))->toMediaCollection('logo');
+        return response()->json(['message' => 'تم تحديث الشعار بنجاح']);
+    }
+
+    return response()->json(['message' => 'لم يتم تحديث الشعار'], 400);
+});
+
+// Update the main trader update route to handle JSON
+Route::put('/traders/{id}', function (Request $request, $id) {
+    $trader = Trader::findOrFail($id);
+
+    // Validate request
+    $request->validate([
+        'store_name' => 'required|string|max:100',
+        'address' => 'required|string|max:255',
+        'city' => 'required|string|max:100',
+        'phone' => 'required|string|max:20',
+        'location_latitude' => 'required|numeric|between:-90,90',
+        'location_longitude' => 'required|numeric|between:-180,180',
+        'user.name' => 'required|string|max:100',
+        'user.email' => 'required|email|max:100',
+        'user.phone' => 'required|string',
+    ]);
+
+    DB::beginTransaction();
+    try {
+        // Update trader
+        $trader->update([
+            'store_name' => $request->store_name,
+            'address' => $request->address,
+            'city' => $request->city,
+            'phone' => $request->phone,
+            'location_latitude' => $request->location_latitude,
+            'location_longitude' => $request->location_longitude,
+        ]);
+
+        // Update associated user
+        $trader->user->update([
+            'name' => $request->user['name'],
+            'email' => $request->user['email'],
+            'phone' => $request->user['phone'],
+        ]);
+
+        DB::commit();
+        return response()->json(['message' => 'تم تحديث البيانات بنجاح']);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'message' => 'حدث خطأ أثناء تحديث البيانات',
+            'error' => $e->getMessage()
+        ], 500);
+    }
 });
