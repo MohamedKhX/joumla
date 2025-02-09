@@ -26,7 +26,13 @@ return new class extends Migration
                 ->nullable()
                 ->constrained('users')
                 ->cascadeOnDelete();
+
+            $table->foreignId('area_id')
+                ->nullable()
+                ->constrained('areas');
+
             $table->softDeletes();
+
             $table->foreignId('trader_id')
                 ->constrained('traders')
                 ->cascadeOnDelete();
