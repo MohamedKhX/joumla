@@ -120,6 +120,7 @@ class TraderResource extends Resource
                                     ->required()
                                     ->maxLength(100)
                                     ->password()
+                                    ->minLength(8)
                                     ->columnSpan(2)
                                     ->disabledOn('edit')
                                     ->hiddenOn('edit'),

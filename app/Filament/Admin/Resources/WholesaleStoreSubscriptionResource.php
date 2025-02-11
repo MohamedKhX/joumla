@@ -47,13 +47,15 @@ class WholesaleStoreSubscriptionResource extends Resource
                             ->label('Start Date')
                             ->translateLabel()
                             ->required()
-                            ->prefixIcon('tabler-calendar'),
+                            ->prefixIcon('tabler-calendar')
+                            ->minDate(now()),
 
                         Forms\Components\DatePicker::make('end_date')
                             ->label('End Date')
                             ->translateLabel()
                             ->required()
-                            ->prefixIcon('tabler-calendar'),
+                            ->prefixIcon('tabler-calendar')
+                            ->afterOrEqual('start_date')
                     ]),
             ]);
     }

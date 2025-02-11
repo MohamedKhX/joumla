@@ -51,13 +51,16 @@ class DriverResource extends Resource
                             ->label('Phone')
                             ->translateLabel()
                             ->required()
+                            ->minLength(10)
+                            ->maxLength(10)
                             ->numeric(),
 
                         Forms\Components\TextInput::make('password')
                             ->label('Password')
                             ->translateLabel()
                             ->required()
-                            ->password(),
+                            ->password()
+                            ->minLength(8),
 
                         SpatieMediaLibraryFileUpload::make('car_image')
                             ->label('Car Image')
