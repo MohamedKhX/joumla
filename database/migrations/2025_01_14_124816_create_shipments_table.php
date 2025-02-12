@@ -21,6 +21,7 @@ return new class extends Migration
                 ->default(ShipmentStateEnum::Pending->value);
 
             $table->decimal('total_amount')->nullable();
+            $table->decimal('delivery_price')->nullable();
 
             $table->foreignId('driver_id')
                 ->nullable()
