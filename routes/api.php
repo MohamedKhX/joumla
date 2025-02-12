@@ -2,6 +2,7 @@
 
 use App\Enums\ShipmentStateEnum;
 use App\Enums\UserTypeEnum;
+use App\Models\Area;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Shipment;
@@ -560,6 +561,97 @@ Route::put('/traders/{id}', function (Request $request, $id) {
         return response()->json([
             'message' => 'حدث خطأ أثناء تحديث البيانات',
             'error' => $e->getMessage()
+        ], 500);
+    }
+});
+// Add these new routes for areas
+Route::get('/areas', function () {
+    $areas = Area::all()->map(function ($area) {
+        return [
+            'id' => $area->id,
+            'name' => $area->name,
+            'price' => $area->price,
+        ];
+    });
+
+    return response()->json($areas);
+});
+
+// Update the order creation endpoint to include area
+Route::post('/trader/orders', function (Request $request) {
+    // Validate the request
+    $request->validate([
+        'trader_id' => 'required|exists:traders,id',
+        'area_id' => 'required|exists:areas,id',  // Add area validation
+        'orders' => 'required|array',
+        'orders.*.wholesale_store_id' => 'required|exists:wholesale_stores,id',
+        'orders.*.products' => 'required|array',
+        'orders.*.products.*.product_id' => 'required|exists:products,id',
+        'orders.*.products.*.quantity' => 'required|integer|min:1',
+        'orders.*.products.*.price' => 'required|numeric|min:0'
+    ]);
+
+    DB::beginTransaction();
+    try {
+        // Get delivery price
+        $area = Area::findOrFail($request->area_id);
+        $orders = [];
+        $ordersTotal = 0;
+
+        foreach ($request->orders as $orderData) {
+            $orderTotal = collect($orderData['products'])->sum(function($product) {
+                return $product['price'] * $product['quantity'];
+            });
+
+            $ordersTotal += $orderTotal;
+
+            // Create order
+            $order = Order::create([
+                'date' => now(),
+                'trader_id' => $request->trader_id,
+                'wholesale_store_id' => $orderData['wholesale_store_id'],
+                'total_amount' => $orderTotal,
+                'is_deferred' => $orderData['deferred'] ?? false,
+            ]);
+
+            // Create order items
+            foreach ($orderData['products'] as $product) {
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $product['product_id'],
+                    'quantity' => $product['quantity'],
+                    'unit_price' => $product['price']
+                ]);
+            }
+
+            $orders[] = $order;
+        }
+
+        // Create shipment with delivery price
+        $shipment = Shipment::create([
+            'date' => now(),
+            'trader_id' => $request->trader_id,
+            'area_id' => $request->area_id,
+            'delivery_price' => $area->price,
+            'total_amount' => $ordersTotal + $area->price
+        ]);
+
+        foreach ($orders as $order) {
+            $order->update(['shipment_id' => $shipment->id]);
+        }
+
+        DB::commit();
+
+        return response()->json([
+            'message' => 'Order created successfully',
+            'shipment_id' => $shipment->id
+        ], 201);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'message' => $e->getMessage() . ' Message',
+            'error' => $e->getMessage() . ' Error'
         ], 500);
     }
 });
