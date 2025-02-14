@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\Auth;
 
 class SubscriptionResource extends Resource
 {
+
+
+    use HasTranslatedLabels;
+    protected static ?string $model = WholesaleStoreSubscription::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
     protected static ?int $navigationSort = 2;
 
@@ -67,6 +72,11 @@ class SubscriptionResource extends Resource
 
 
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->where('wholesale_store_id', Auth::user()->wholesaleStore->id);
+    }
 
 
 
@@ -84,10 +94,9 @@ class SubscriptionResource extends Resource
 
 
 
-    protected static ?string $navigationLabel = 'الاشتراكات';
 
-    use HasTranslatedLabels;
-    protected static ?string $model = WholesaleStoreSubscription::class;
+
+
 
     public static function getPages(): array
     {
@@ -95,10 +104,6 @@ class SubscriptionResource extends Resource
             'index' => Pages\ListSubscriptions::route('/'),
         ];
     }
+    protected static ?string $navigationLabel = 'الاشتراكات';
 
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->where('wholesale_store_id', Auth::user()->wholesaleStore->id);
-    }
 }

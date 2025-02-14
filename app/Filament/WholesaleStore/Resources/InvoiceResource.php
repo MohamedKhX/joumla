@@ -20,6 +20,10 @@ use Illuminate\Support\Facades\Auth;
 
 class InvoiceResource extends Resource
 {
+    use HasTranslatedLabels;
+
+    protected static ?string $model = Invoice::class;
+
     protected static ?int $navigationSort = 3;
 
     protected static ?string $navigationIcon = 'tabler-file-invoice';
@@ -73,52 +77,6 @@ class InvoiceResource extends Resource
             ]);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    use HasTranslatedLabels;
-
-    protected static ?string $model = Invoice::class;
-
-
-
     public static function canCreate(): bool
     {
         return false;
@@ -135,6 +93,47 @@ class InvoiceResource extends Resource
             ->where('wholesale_store_id', Auth::user()->wholesaleStore->id)
             ->latest();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public static function getPages(): array
     {

@@ -23,6 +23,10 @@ class InvoiceResource extends Resource
 {
 
 
+    use HasTranslatedLabels;
+
+    protected static ?string $model = Invoice::class;
+
     protected static ?string $navigationIcon = 'tabler-file-invoice';
 
     protected static ?int $navigationSort = 6;
@@ -81,45 +85,6 @@ class InvoiceResource extends Resource
                     ->download(),
             ]);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    use HasTranslatedLabels;
-
-    protected static ?string $model = Invoice::class;
-
     public static function canCreate(): bool
     {
         return false;
@@ -134,6 +99,41 @@ class InvoiceResource extends Resource
     {
         return parent::getEloquentQuery()->latest();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public static function getPages(): array
     {

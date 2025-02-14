@@ -16,6 +16,9 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TraderTypeResource extends Resource
 {
+    use HasTranslatedLabels;
+    protected static ?string $model = TraderType::class;
+
     protected static ?string $navigationIcon = 'tabler-square-rotated-filled';
 
     protected static ?int $navigationSort = 9;
@@ -77,8 +80,7 @@ class TraderTypeResource extends Resource
 
 
 
-    use HasTranslatedLabels;
-    protected static ?string $model = TraderType::class;
+
 
     public static function getPages(): array
     {

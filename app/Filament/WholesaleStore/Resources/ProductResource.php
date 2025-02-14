@@ -22,6 +22,11 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductResource extends Resource
 {
+
+    use HasTranslatedLabels;
+
+    protected static ?string $model = Product::class;
+
     protected static ?string $navigationIcon = 'tabler-box';
 
     public static function form(Form $form): Form
@@ -102,6 +107,12 @@ class ProductResource extends Resource
                 Tables\Actions\DeleteAction::make(),
             ]);
     }
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->where('wholesale_store_id', Auth::user()->wholesaleStore->id)
+            ->latest();
+    }
 
 
 
@@ -128,11 +139,6 @@ class ProductResource extends Resource
 
 
 
-
-
-    use HasTranslatedLabels;
-
-    protected static ?string $model = Product::class;
 
     public static function getPages(): array
     {
@@ -143,10 +149,5 @@ class ProductResource extends Resource
         ];
     }
 
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->where('wholesale_store_id', Auth::user()->wholesaleStore->id)
-            ->latest();
-    }
+
 }

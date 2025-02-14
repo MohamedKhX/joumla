@@ -35,6 +35,11 @@ class Shipment extends Model implements HasUniqueNumberInterface
         return $this->hasMany(Order::class);
     }
 
+    public function area(): BelongsTo
+    {
+        return $this->belongsTo(Area::class);
+    }
+
     public function driver(): BelongsTo
     {
         return $this->belongsTo(User::class, 'driver_id');

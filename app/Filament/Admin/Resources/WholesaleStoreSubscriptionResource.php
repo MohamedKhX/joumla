@@ -18,6 +18,9 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class WholesaleStoreSubscriptionResource extends Resource
 {
+    use HasTranslatedLabels;
+
+    protected static ?string $model = WholesaleStoreSubscription::class;
     protected static ?string $navigationIcon = 'tabler-cash';
     protected static ?int $navigationSort = 2;
 
@@ -121,9 +124,7 @@ class WholesaleStoreSubscriptionResource extends Resource
 
 
 
-    use HasTranslatedLabels;
 
-    protected static ?string $model = WholesaleStoreSubscription::class;
 
     public static function getPages(): array
     {

@@ -146,7 +146,7 @@ Route::post('/trader/orders', function (Request $request) {
 Route::get('/trader/{id}/orders', function (Request $request) {
     $trader = Trader::where('user_id', $request->id)->first();
 
-    $orders = Order::with(['wholesaleStore', 'items.product'])
+    $orders = Order::with(['wholesaleStore', 'shipment', 'items.product'])
         ->where('trader_id', $trader->id)
         ->orderBy('created_at', 'desc')
         ->get()
@@ -168,7 +168,9 @@ Route::get('/trader/{id}/orders', function (Request $request) {
                         'quantity' => $item->quantity,
                         'price' => $item->unit_price,
                     ];
-                })
+                }),
+                'shipment_area_name' => $order->shipment?->area->name ?? '',
+                'shipment_deliver_price' => $order->shipment?->area->price ?? 0,
             ];
         });
 
@@ -389,12 +391,12 @@ Route::post('/shipments/{id}/{driverId}/accept', function (Request $request) {
         return response()->json(['message' => 'This shipment is already assigned to another driver'], 400);
     }
 
-    //$this->shipment->trader->user->notify(new DriverAcceptedOrderNotification($shipment));
-
     $shipment->update([
         'driver_id' => $request->driverId,
         'state' => ShipmentStateEnum::WaitingForReceiving,
     ]);
+
+    $shipment->trader->user->notify(new DriverAcceptedOrderNotification($shipment));
 
     return response()->json(['message' => 'Shipment accepted successfully']);
 });
@@ -403,10 +405,9 @@ Route::post('/shipments/{id}/{driverId}/accept', function (Request $request) {
 Route::post('/shipments/{id}/Received', function (Request $request) {
     $shipment = Shipment::findOrFail($request->id);
 
-    //$this->shipment->trader->user->notify(new DriverReceivedOrderNotification($shipment));
-
-
     $shipment->update(['state' => ShipmentStateEnum::Received]);
+
+    $shipment->trader->user->notify(new DriverReceivedOrderNotification($shipment));
 
     return response()->json(['message' => 'Shipment Received successfully']);
 });
@@ -416,7 +417,6 @@ Route::post('/shipments/{id}/Received', function (Request $request) {
 Route::post('/shipments/{id}/Shipping', function (Request $request, $id) {
     $shipment = Shipment::findOrFail($request->id);
 
-    //$this->shipment->trader->user->notify(new DriverShipedOrderNotification($shipment));
 
     $shipment->update(['state' => ShipmentStateEnum::Shipping]);
 
@@ -427,6 +427,8 @@ Route::post('/shipments/{id}/Shipped', function (Request $request, $id) {
     $shipment = Shipment::findOrFail($request->id);
 
     $shipment->update(['state' => ShipmentStateEnum::Shipped]);
+
+    $shipment->trader->user->notify(new DriverShipedOrderNotification($shipment));
 
     return response()->json(['message' => 'Shipment Shipped successfully']);
 });
@@ -531,7 +533,6 @@ Route::put('/traders/{id}', function (Request $request, $id) {
         'location_longitude' => 'required|numeric|between:-180,180',
         'user.name' => 'required|string|max:100',
         'user.email' => 'required|email|max:100',
-        'user.phone' => 'required|string',
     ]);
 
     DB::beginTransaction();
@@ -550,7 +551,6 @@ Route::put('/traders/{id}', function (Request $request, $id) {
         $trader->user->update([
             'name' => $request->user['name'],
             'email' => $request->user['email'],
-            'phone' => $request->user['phone'],
         ]);
 
         DB::commit();

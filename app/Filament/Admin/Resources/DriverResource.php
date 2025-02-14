@@ -23,8 +23,10 @@ use Illuminate\Support\Facades\Mail;
 
 class DriverResource extends Resource
 {
-    protected static ?int $navigationSort = 5;
+    use HasTranslatedLabels;
+    protected static ?string $model = User::class;
 
+    protected static ?int $navigationSort = 5;
 
     protected static ?string $navigationIcon = 'tabler-car';
 
@@ -171,6 +173,10 @@ class DriverResource extends Resource
             ]);
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where('type', UserTypeEnum::Driver);
+    }
 
 
 
@@ -210,12 +216,6 @@ class DriverResource extends Resource
 
 
 
-
-
-
-
-    use HasTranslatedLabels;
-    protected static ?string $model = User::class;
 
     public static function getPages(): array
     {
@@ -226,10 +226,7 @@ class DriverResource extends Resource
    */     ];
     }
 
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()->where('type', UserTypeEnum::Driver);
-    }
+
 
     public static function getModelLabel(): string
     {

@@ -34,6 +34,10 @@ use Illuminate\Support\Facades\Mail;
 
 class TraderResource extends Resource
 {
+    use HasTranslatedLabels;
+
+    protected static ?string $model = Trader::class;
+
     protected static ?string $navigationIcon = 'tabler-user-hexagon';
 
     protected static ?int $navigationSort = 3;
@@ -273,9 +277,12 @@ class TraderResource extends Resource
 
 
 
-    use HasTranslatedLabels;
 
-    protected static ?string $model = Trader::class;
+
+
+
+
+
 
 
     public static function infolist(Infolist $infolist): Infolist

@@ -18,6 +18,9 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderResource extends Resource
 {
+    use HasTranslatedLabels;
+
+    protected static ?string $model = Order::class;
     protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
     protected static ?int $navigationSort = 1;
 
@@ -215,48 +218,52 @@ class OrderResource extends Resource
             ]);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    use HasTranslatedLabels;
-
-    protected static ?string $model = Order::class;
-
     public static function canCreate(): bool
     {
         return false;
     }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->where('wholesale_store_id', Auth::user()->wholesaleStore->id)
+            ->latest();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     public static function getPages(): array
@@ -269,10 +276,5 @@ class OrderResource extends Resource
         ];
     }
 
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->where('wholesale_store_id', Auth::user()->wholesaleStore->id)
-            ->latest();
-    }
+
 }
