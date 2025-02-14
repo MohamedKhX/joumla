@@ -321,6 +321,8 @@ Route::get('/shipments/available', function () {
                 'id' => $shipment->id,
                 'date' => $shipment->created_at->format('Y-m-d H:i'),
                 'total_amount' => $shipment->totalAmount,
+                'shipment_area_name' => $shipment->area->name ?? '',
+                'shipment_deliver_price' => $shipment->area->price ?? 0,
                 'trader' => [
                     'name' => $shipment->trader->store_name,
                     'address' => $shipment->trader->address,
@@ -358,6 +360,8 @@ Route::get('/driver/{id}/shipments', function (Request $request) {
                 'date' => $shipment->created_at->format('Y-m-d H:i'),
                 'state' => $shipment->state,
                 'total_amount' => $shipment->totalAmount,
+                'shipment_area_name' => $shipment->area->name ?? '',
+                'shipment_deliver_price' => $shipment->area->price ?? 0,
                 'trader' => [
                     'name' => $shipment->trader->store_name,
                     'address' => $shipment->trader->address,
