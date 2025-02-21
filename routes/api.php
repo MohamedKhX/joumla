@@ -336,6 +336,8 @@ Route::get('/shipments/available', function () {
                     return [
                         'id' => $order->id,
                         'store_name' => $order->wholesaleStore->name,
+                        'location_latitude' => $order->wholesaleStore->location_latitude,
+                        'location_longitude' => $order->wholesaleStore->location_longitude,
                         'items' => $order->items->map(function ($item) {
                             return [
                                 'product_name' => $item->product->name,
@@ -375,6 +377,9 @@ Route::get('/driver/{id}/shipments', function (Request $request) {
                     return [
                         'id' => $order->id,
                         'store_name' => $order->wholesaleStore->name,
+
+                        'location_latitude' => $order->wholesaleStore->location_latitude,
+                        'location_longitude' => $order->wholesaleStore->location_longitude,
                         'items' => $order->items->map(function ($item) {
                             return [
                                 'product_name' => $item->product->name,
