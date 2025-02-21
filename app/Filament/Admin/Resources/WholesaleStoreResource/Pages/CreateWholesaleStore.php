@@ -21,6 +21,11 @@ class CreateWholesaleStore extends CreateRecord
 
         $data['user_id'] = $user->id;
 
+        $data['location_latitude']  = $data['map'][0];
+        $data['location_longitude'] = $data['map'][1];
+
+        unset($data['map']);
+
         return $data;
     }
 }

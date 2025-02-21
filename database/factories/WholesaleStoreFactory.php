@@ -34,7 +34,10 @@ class WholesaleStoreFactory extends Factory
             'city' => fake()->randomElement($libyanCities),
             'address' => fake()->randomElement($commercialAreas) . '، ' . fake()->buildingNumber(),
             'phone' => fake()->e164PhoneNumber(),
-            'wholesale_store_type_id' => fake()->numberBetween(1, 10)
+            'wholesale_store_type_id' => fake()->numberBetween(1, 10),
+            'location_latitude' => 32.8752,
+            'location_longitude' => 13.1875,
+
         ];
     }
 }

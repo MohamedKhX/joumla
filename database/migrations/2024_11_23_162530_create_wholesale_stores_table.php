@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('city', 100);
             $table->string('address', 100);
             $table->string('phone');
+            $table->decimal('location_latitude', 10, 8)->nullable();
+            $table->decimal('location_longitude', 10, 8)->nullable();
+
             $table->softDeletes();
             $table->foreignId('user_id')->constrained();
             $table->foreignId('wholesale_store_type_id');

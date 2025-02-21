@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Enums\WholesaleStoreEnum;
 use App\Filament\Resources\WholesaleStoreResource\Pages;
 use App\Filament\Resources\WholesaleStoreResource\RelationManagers;
+use App\Forms\Components\MapSelect;
 use App\Models\Trader;
 use App\Models\WholesaleStore;
 use App\Models\WholesaleStoreType;
@@ -95,6 +96,12 @@ class WholesaleStoreResource extends Resource
                             ->minLength(10)
                             ->maxLength(10)
                             ->suffixIcon('tabler-phone-call')
+                            ->columnSpan(2),
+
+                        MapSelect::make('map')
+                            ->label('Select Location')
+                            ->translateLabel()
+                            ->required()
                             ->columnSpan(2),
 
                         Fieldset::make('user')
