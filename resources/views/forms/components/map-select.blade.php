@@ -11,7 +11,6 @@
             crossorigin="">
     </script>
 
-    <input wire:model="{{ $getStatePath() }}" id="latitude" type="hidden">
 
     <div x-data="{ state: $wire.$entangle('{{ $getStatePath() }}') }"
          x-init="
@@ -29,7 +28,7 @@
 
                         map.setView([lat, lng], 13);
 
-                        let marker = L.marker([lat, lng]).addTo(map);
+
 
                         document.getElementById('latitude').value = lat;
                         document.getElementById('longitude').value = lng;
@@ -77,7 +76,7 @@
             });
         ">
         <input  id="longitude" type="hidden">
-        <input  id="longitude" type="hidden">
+        <input  id="latitude" type="hidden">
 
         <div class="mb-3" wire:ignore>
             <div id="map" style="width: 100%; height: 400px;"></div>
